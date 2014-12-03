@@ -26,7 +26,7 @@ curso varchar (5) not null
 );
 
 create table matriculas(
-id_matricula in not null auto_increment primary key,
+id_matricula int not null auto_increment primary key,
 id_asignatura int not,
 username varchar(20) not null
 );

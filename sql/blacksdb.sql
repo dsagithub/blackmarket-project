@@ -31,6 +31,7 @@ foreign key (id_asignatura)  references asignaturas(id_asignatura)  on delete ca
 );
 
 /*
+ * 
 create table carpetas(
 id_asignatura varchar(20) not null,
 id_carpeta int  not null auto_increment primary key,

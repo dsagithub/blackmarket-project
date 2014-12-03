@@ -6,9 +6,11 @@ use blacksdb;
 create table users (
 username	varchar(20) not null primary key,
 password	char(100) not null,
-nombre	        varchar(50) not null,
-email	        varchar(50) not null
+nombre	    varchar(50) not null,
+email	varchar(50) not null,
+id_matricula int not null
 );
+
  
 create table user_roles (
 username	varchar(20) not null,
@@ -21,6 +23,19 @@ create table asignaturas(
 id_asignatura int not null auto_increment primary key,
 nombre varchar(20) not null,
 curso varchar (5) not null
+);
+
+create table matriculas(
+id_matricula in not null auto_increment primary key,
+id_asignatura int not,
+username varchar(20) not null
+);
+
+create table users_matriculas (
+username varchar(20) not null,
+id_matricula  int not null,
+foreign key (username)  references users(username) on delete cascade,
+foreign key (id_matricula)  references matriculas(id_matricula)  on delete cascade
 );
 
 create table users_asignaturas(

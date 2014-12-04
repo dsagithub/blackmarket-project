@@ -68,6 +68,7 @@ fecha timestamp default current_timestamp ON UPDATE CURRENT_TIMESTAMP,
 autor varchar (50) not null,
 link varchar (200) not null,
 invalid int,
+creation_timestamp	datetime not null default current_timestamp,
 /*foreign key (id_carpeta) references carpetas(id_carpeta) on delete cascade,*/
 foreign key (id_asignatura) references asignaturas(id_asignatura) on delete cascade,
 foreign key (autor) references users (username) on delete cascade

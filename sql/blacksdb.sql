@@ -4,17 +4,15 @@ create database blacksdb;
 use blacksdb;
  
 create table users (
-username	varchar(20) not null primary key,
+username	varchar(20) not null primary key ,
 password	char(100) not null,
 nombre	    varchar(50) not null,
-email	varchar(50) not null,
-id_matricula int not null
+email	varchar(50) not null
 );
 
- 
 create table user_roles (
 username	varchar(20) not null,
-rolename        varchar(20) not null,
+rolename    varchar(20) not null,
 foreign key(username) references users(username) on delete cascade,
 primary key (username, rolename)
 );
@@ -26,27 +24,26 @@ curso varchar (5) not null
 );
 
 create table matriculas(
-id_matricula int not null auto_increment primary key,
-username varchar(20) not null
+id_asignatura_matriculas int not null auto_increment primary key,
+nombre varchar(20) not null
 );
 
-create table users_matriculas (
-username varchar(20) not null,
-id_matricula  int not null,
-foreign key (username)  references users(username) on delete cascade,
-foreign key (id_matricula)  references matriculas(id_matricula)  on delete cascade
-);
 
 create table users_asignaturas(
-username varchar(20) not null,
+username_asignaturas varchar(20) not null,
 id_asignatura  int not null,
-foreign key (username)  references users(username) on delete cascade,
+foreign key (username_asignaturas)  references users(username) on delete cascade,
 foreign key (id_asignatura)  references asignaturas(id_asignatura)  on delete cascade
 );
 
+create table users_matriculas(
+username_matriculas varchar(20) not null,
+id_asignatura_u_matriculas int not null,
+foreign key(username_matriculas) references users(username) on delete cascade,
+foreign key (id_asignatura_u_matriculas) references matriculas(id_asignatura_matriculas)  on delete cascade
+);
+
 /*
- * 
- * 
 create table carpetas(
 id_asignatura varchar(20) not null,
 id_carpeta int  not null auto_increment primary key,
@@ -57,6 +54,7 @@ foreign key (id_asignatura) references asignaturas(id_asignatura) on delete casc
 /*
  * Id_tipo (1= Teoria, 2= Ejercicios, 3= Examenes)
  */
+
 create table contenidos (
 id_contenido int not null auto_increment primary key,
 id_asignatura int not null,

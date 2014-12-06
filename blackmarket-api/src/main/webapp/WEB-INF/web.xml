@@ -74,6 +74,10 @@
 	<filter-name>CORS</filter-name>
 	<url-pattern>/*</url-pattern>
 </filter-mapping>
+<login-config>
+	<auth-method>BASIC</auth-method>
+	<!-- <realm-name>westerios</realm-name> -->
+</login-config>
 
 
 </web-app>

@@ -23,21 +23,23 @@ public class BlackCollection {
 private String pattern;
 private List<Link> links;
 private List<Black> blacks;
-public void setBlacks(List<Black> blacks) {
-	this.blacks = blacks;
-}
-
 private long newestTimestamp;
 private long oldestTimestamp;
-public List<Link> getLinks() {
-	return links;
-}
+
 public BlackCollection(){
 	super();
 	blacks = new ArrayList<>();
 }
 public void addBlack(Black black){
 	blacks.add(black);
+}
+
+public void setBlacks(List<Black> blacks) {
+	this.blacks = blacks;
+}
+
+public List<Link> getLinks() {
+	return links;
 }
 
 public void setLinks(List<Link> links) {

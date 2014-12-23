@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
@@ -31,9 +32,11 @@ import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.User;
 public class UserResource {
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	 
-	private final static String GET_USER_BY_USERNAME_QUERY = "select * from users where username=?";
-	private final static String INSERT_USER_INTO_USERS = "insert into users values(?, MD5(?), ?, ?)";
-	private final static String INSERT_USER_INTO_USER_ROLES = "insert into user_roles values (?, 'registered')";
+	private final static String GET_USER_BY_USERNAME_QUERY = "Select * from users where username=?";
+	private final static String INSERT_USER_INTO_USERS = "Insert into users values(?, MD5(?), ?, ?)";
+	private final static String INSERT_USER_INTO_USER_ROLES = "Insert into user_roles values (?, 'registered')";
+	
+	private final static String DELETE_USER_QUERY = "Delete from users where username=?";
 	
 
 	private User getUserFromDatabaseNopassword(String username) {
@@ -74,11 +77,7 @@ public class UserResource {
 		return usuario;
 	}
 
-	
-	
-	// EJERCICIO2
-	// Apartado 1
-	
+	/*
 	@GET
 	@Path("/{username}")
 	//@Produces(MediaType.BEETER_API_STING)
@@ -107,7 +106,7 @@ public class UserResource {
 		rb = Response.ok(usuario).cacheControl(cc).tag(eTag);
 	 
 		return rb.build();
-	}
+	}*/
 	
 	
 	@POST
@@ -176,7 +175,41 @@ public class UserResource {
 		user.setPassword(null);
 		return user;
 	}
- 
+	
+	
+	@DELETE
+	@Path("/{username}")
+	public void deleteSting(@PathParam("username") String username) {
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+		} catch (SQLException e) {
+			throw new ServerErrorException("Could not connect to the database",
+					Response.Status.SERVICE_UNAVAILABLE);
+		}
+
+		PreparedStatement stmt = null;
+		try {
+			stmt = conn.prepareStatement(DELETE_USER_QUERY);
+			stmt.setString(1, username);
+
+			int rows = stmt.executeUpdate();
+			if (rows == 0)
+				throw new NotFoundException("No existe ningun usuario con el nombre de usuario "
+						+ username);
+		} catch (SQLException e) {
+			throw new ServerErrorException(e.getMessage(),
+					Response.Status.INTERNAL_SERVER_ERROR);
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+			}
+		}
+	}
+ 	
 	private void validateUser(User user) {
 		if (user.getUsername() == null)
 			throw new BadRequestException("username cannot be null.");

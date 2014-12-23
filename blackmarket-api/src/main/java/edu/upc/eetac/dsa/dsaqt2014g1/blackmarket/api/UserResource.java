@@ -36,6 +36,8 @@ public class UserResource {
 	private final static String INSERT_USER_INTO_USERS = "Insert into users values(?, MD5(?), ?, ?)";
 	private final static String INSERT_USER_INTO_USER_ROLES = "Insert into user_roles values (?, 'registered')";
 	
+	private final static String GET_ROL_BY_USERNAME_QUERY = "Select rolename from user_roles where username=?";
+	
 	private final static String DELETE_USER_QUERY = "Delete from users where username=?";
 	
 
@@ -60,7 +62,7 @@ public class UserResource {
 				usuario.setEmail(rs.getString("email"));
 				usuario.setNombre(rs.getString("nombre"));
 			} else {
-				throw new NotFoundException(username+ " not found");
+				throw new NotFoundException(username+ " no encontrado!");
 			}
 		} catch (SQLException e) {
 			throw new ServerErrorException(e.getMessage(),
@@ -226,15 +228,17 @@ public class UserResource {
 	@Produces(MediaType.BLACKS_API_USER)
 	@Consumes(MediaType.BLACKS_API_USER_COLLECTION)
 	public User login(User user) {
-		if (user.getUsername() == null || user.getPassword() == null)
+		if (user.getUsername() == "" || user.getPassword() == "")
 			throw new BadRequestException(
-					"username and password cannot be null.");
+					"Los campo username y contraseña no pueden ser nulos.");
  
 		String pwdDigest = DigestUtils.md5Hex(user.getPassword());
 		String storedPwd = getUserFromDatabase(user.getUsername(), true)
 				.getPassword();
  
 		user.setLoginSuccessful(pwdDigest.equals(storedPwd));
+		String rol = getRolFromDatabase(user.getUsername());
+		user.setRol(rol);
 		user.setPassword(null);
 		return user;
 	}
@@ -262,7 +266,7 @@ public class UserResource {
 				user.setEmail(rs.getString("email"));
 				user.setNombre(rs.getString("nombre"));
 			} else
-				throw new NotFoundException(username + " not found.");
+				throw new NotFoundException(username + " no registrado.");
 		} catch (SQLException e) {
 			throw new ServerErrorException(e.getMessage(),
 					Response.Status.INTERNAL_SERVER_ERROR);
@@ -276,6 +280,41 @@ public class UserResource {
 		}
  
 		return user;
+	}
+	
+	private String getRolFromDatabase(String username) {
+		String rol ;
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+		} catch (SQLException e) {
+			throw new ServerErrorException("Could not connect to the database",
+					Response.Status.SERVICE_UNAVAILABLE);
+		}
+ 
+		PreparedStatement stmt = null;
+		try {
+			stmt = conn.prepareStatement(GET_ROL_BY_USERNAME_QUERY);
+			stmt.setString(1, username);
+			ResultSet rs = stmt.executeQuery();
+			if (rs.next()) {
+				rol= rs.getString("rolename");
+			} else
+				throw new NotFoundException(username + " no registrado.");
+		} catch (SQLException e) {
+			throw new ServerErrorException(e.getMessage(),
+					Response.Status.INTERNAL_SERVER_ERROR);
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				
+				//FALTA ALGO
+			}
+		}
+		return rol;
 	}
 
 }

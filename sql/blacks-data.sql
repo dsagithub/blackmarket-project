@@ -5,6 +5,9 @@ insert into user_roles values ('alicia', 'registered');
 insert into users values('blas', MD5('blas'), 'Blas', 'blas@gmail.com');
 insert into user_roles values ('blas', 'registered');
 
+insert into users values('admin', MD5('admin'), 'Admin', 'adminblackmarket@gmail.com');
+insert into user_roles values ('admin', 'administrador');
+
 
 insert into asignaturas (nombre,curso) values ('ADX','2a');
 insert into asignaturas (nombre,curso) values ('DSA','2a');

@@ -13,8 +13,8 @@ insert into asignaturas (nombre,curso) values ('ADX','2a');
 insert into asignaturas (nombre,curso) values ('DSA','2a');
 insert into asignaturas (nombre,curso) values ('SAI','2a');
 
-insert into matriculas (nombre) values ('DSA');
-insert into matriculas (nombre) values ('ADX');
+/*insert into matriculas (nombre) values ('DSA');
+insert into matriculas (nombre) values ('ADX');*/
 
 insert into users_matriculas (username_matriculas,id_asignatura_u_matriculas) values ('Alicia', 1);
 insert into users_matriculas (username_matriculas,id_asignatura_u_matriculas) values ('Blas', 2);

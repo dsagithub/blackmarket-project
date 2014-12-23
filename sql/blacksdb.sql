@@ -23,10 +23,11 @@ nombre varchar(20) not null,
 curso varchar (5) not null
 );
 
+/*
 create table matriculas(
 id_asignatura_matriculas int not null auto_increment primary key,
 nombre varchar(20) not null
-);
+);*/
 
 
 create table users_asignaturas(
@@ -40,7 +41,7 @@ create table users_matriculas(
 username_matriculas varchar(20) not null,
 id_asignatura_u_matriculas int not null,
 foreign key(username_matriculas) references users(username) on delete cascade,
-foreign key (id_asignatura_u_matriculas) references matriculas(id_asignatura_matriculas)  on delete cascade
+foreign key (id_asignatura_u_matriculas) references  asignaturas(id_asignatura)  on delete cascade
 );
 
 /*

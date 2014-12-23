@@ -79,36 +79,23 @@ public class UserResource {
 		return usuario;
 	}
 
-	/*
+	
 	@GET
 	@Path("/{username}")
-	//@Produces(MediaType.BEETER_API_STING)
+	@Produces(MediaType.BLACKS_API_USER)
 	public Response getSting(@PathParam("username") String username, @Context Request request) {
-		// Create CacheControl
 		User usuario = new User();
 		CacheControl cc = new CacheControl();
-		usuario = getUserFromDatabaseNopassword(username);
-		
+		usuario = getUserFromDatabaseNopassword(username);		
 		String referencia = DigestUtils.md5Hex(usuario.getNombre()+ usuario.getEmail());
-			 
-		// Calculate the ETag on last modified date of user resource
 		EntityTag eTag = new EntityTag(referencia);
-	 
-		// Verify if it matched with etag available in http request
-		Response.ResponseBuilder rb = request.evaluatePreconditions(eTag);
-	 
-		// If ETag matches the rb will be non-null;
-		// Use the rb to return the response without any further processing
+		Response.ResponseBuilder rb = request.evaluatePreconditions(eTag); 
 		if (rb != null) {
 			return rb.cacheControl(cc).tag(eTag).build();
 		}
-		// If rb is null then either it is first time request; or resource is
-		// modified
-		// Get the updated representation and return with Etag attached to it
-		rb = Response.ok(usuario).cacheControl(cc).tag(eTag);
-	 
+		rb = Response.ok(usuario).cacheControl(cc).tag(eTag);	 
 		return rb.build();
-	}*/
+	}
 	
 	
 	@POST

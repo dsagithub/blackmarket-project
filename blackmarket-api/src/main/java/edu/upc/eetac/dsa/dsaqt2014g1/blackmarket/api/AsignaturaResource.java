@@ -38,7 +38,6 @@ public class AsignaturaResource {
 	@Produces(MediaType.BLACKS_API_ASIGNATURA_COLLECTION)
 	public AsignaturaCollection getAsignatura() {
 		AsignaturaCollection asignaturas = new AsignaturaCollection();
-		System.out.println("Esto sale\n");
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();

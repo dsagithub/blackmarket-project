@@ -11,7 +11,10 @@ insert into user_roles values ('admin', 'administrador');
 
 insert into asignaturas (nombre,curso) values ('ADX','2a');
 insert into asignaturas (nombre,curso) values ('DSA','2a');
-insert into asignaturas (nombre,curso) values ('SAI','2a');
+insert into asignaturas (nombre,curso) values ('FC','2a');
+insert into asignaturas (nombre,curso) values ('API','2b');
+insert into asignaturas (nombre,curso) values ('OESC','2b');
+insert into asignaturas (nombre,curso) values ('CESA','2b');
 
 /*insert into matriculas (nombre) values ('DSA');
 insert into matriculas (nombre) values ('ADX');*/

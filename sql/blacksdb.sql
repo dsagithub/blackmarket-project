@@ -57,7 +57,7 @@ foreign key (id_asignatura) references asignaturas(id_asignatura) on delete casc
  */
 
 create table contenidos (
-id_contenido int not null auto_increment primary key,
+id_contenido varchar(50)not null  primary key,
 id_asignatura int not null,
 /*id_carpeta int  not null,*/
 id_tipo int not null,
@@ -65,7 +65,7 @@ titulo varchar(30) not null,
 descripcion varchar(100),
 fecha timestamp default current_timestamp ON UPDATE CURRENT_TIMESTAMP,
 autor varchar (50) not null,
-link varchar (200) not null,
+/*link varchar (200) not null,*/
 invalid int,
 creation_timestamp	datetime not null default current_timestamp,
 /*foreign key (id_carpeta) references carpetas(id_carpeta) on delete cascade,*/
@@ -75,7 +75,7 @@ foreign key (autor) references users (username) on delete cascade
 
 create table comentarios (
 autor varchar(20) not null primary key,
-id_contenido int not null,
+id_contenido varchar(50) not null,
 comentario varchar (100) not null,
 foreign key (id_contenido) references contenidos(id_contenido) on delete cascade,
 foreign key (autor) references users(username) on delete cascade

@@ -17,7 +17,7 @@ public class Black {
 		//@InjectLink(resource = StingResource.class, style = Style.ABSOLUTE, rel = "stings", title = "Latest stings", type = MediaType.BEETER_API_STING_COLLECTION),
 		//@InjectLink(resource = StingResource.class, style = Style.ABSOLUTE, rel = "self edit", title = "Sting", type = MediaType.BEETER_API_STING, method = "getSting", bindings = @Binding(name = "stingid", value = "${instance.stingid}")) })
 private List<Link> links;
-private int id_contenido;
+private String id_contenido;
 private int id_asignatura;
 private int id_tipo;
 private String titulo;
@@ -41,10 +41,10 @@ public List<Link> getLinks() {
 public void setLinks(List<Link> links) {
 	this.links = links;
 }
-public int getId_contenido() {
+public String getId_contenido() {
 	return id_contenido;
 }
-public void setId_contenido(int id_contenido) {
+public void setId_contenido(String id_contenido) {
 	this.id_contenido = id_contenido;
 }
 public int getId_asignatura() {

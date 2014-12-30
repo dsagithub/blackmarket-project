@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Landing Page - Start Bootstrap Theme</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/landing-page.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div  id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a>BIENVENIDO</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Header -->
+    <div class="intro-header">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="intro-message" style="font-size:25px">
+                        <h1>Black Market</h1>
+                        <h3>Keep Calm and Consulta tus Apuntes</h3>
+                        <hr class="intro-divider">
+                        <ul class="list-inline intro-social-buttons">
+						
+						
+                            <li>
+                                <a class="btn btn-primary custom-button red-btn" STYLE="background-color:red"  data-toggle="modal" data-target="#signin" data-whatever="@fat"> <span class="network-name">SIGN IN</span></a>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary custom-button red-btn" STYLE="background-color:green"  data-toggle="modal" data-target="#loginin" data-whatever="@fat"> <span class="network-name">LOGIN</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+		<div class="modal fade" id="signin"  tabindex="-1" role="dialog"  aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog" style="width:300px;height:500px">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<h4 class="title1" align="left" background-color="red" id="exampleModalLabel" color>Nuevo usuario</h4>
+			  </div>
+			  <div class="modal-body">
+				<form>
+				  <div class="form-group">
+					<input type="text" class="form-control" placeholder= "Nombre" maxlength="20" id="new_usuario_nombre">
+				  </div>
+				  <div class="form-group">
+					<input type="text" class="form-control"  placeholder= "Username" maxlength="20"id="new_usuario_username">
+				  </div>
+				  <div class="form-group">
+					<input type="text" class="form-control"  placeholder= "Contraseña" maxlength="20"id="new_usuario_password">
+				  </div>
+				  <div class="form-group">
+					<input type="text" class="form-control" placeholder= "Email"  id="new_usuario_email">
+				  </div>
+				</form>
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="vmatricula" data-toggle="modal" style="display:none" data-target="#matricula" data-whatever="@fat"></button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" id="signcancelar" >Cancelar</button>
+				<button type="button" class="btn btn-primary" id="sign">Sign in</button>
+			  </div>
+			</div>
+		  </div>
+		</div>
+		 
+		<!-- Boton Sigin  lleva a matricula-->
+		<div class="modal fade" id="matricula"  tabindex="-1" role="dialog"  aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog" style="width:500px;height:500px">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<h4 class="title1" align="left" background-color="red" id="exampleModalLabel" color>Nueva Matricula<p> Selecciona las assignaturas:</p></h4>
+			  </div>
+			  <div class="modal-body">
+				<form>
+				  <div class="row">
+					  <div>
+						<div class="panel panel-default">
+						  <div class="panel-heading">
+							<h3 class="panel-title">Assignaturas </h3>
+						  </div>
+						  <div class="title1">
+							 <span id="asignatura_result"></span>
+						  </div>
+						</div>
+					  </div><!-- /.col-sm-8 -->
+				  </div>
+				</form>
+			  </div>
+			  <div class="modal-footer">
+			 <button type="button" class="btn btn-primary" id="msignin">Login</button>
+			  </div>
+			</div>
+		  </div>
+		</div>
+		
+		<div class="modal fade" id="loginin"  tabindex="-1" role="dialog"  aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog" style="width:300px;height:500px">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<h4 class="title1" align="left" id="exampleModalLabel">Acceder</h4>
+			  </div>
+			  <div class="modal-body">
+				<form>
+				  <div class="form-group">
+				<!-- <label for="message-text" class="control-label">Username:</label>-->
+					<input type="text" class="form-control"  placeholder= "Username" maxlength="20"id="login_username">
+				  </div>
+				  <div class="form-group">
+					<!-- <label for="message-text" class="control-label">Contraseña:</label>-->
+					<input type="text" class="form-control"  placeholder= "Contraseña" maxlength="20"id="login_password">
+				  </div>
+				</form>
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal" id="logincancelar" >Cancelar</button>
+				<button type="button" class="btn btn-primary" id="login">Login</button>
+			  </div>
+			</div>
+		  </div>
+		</div>	
+        <!-- /.container -->
+
+    </div>
+    <!-- /.intro-header -->   
+
+      <script src="https://code.jquery.com/jquery.js"></script>
+                <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js"></script>
+                <script src="http://cachedcommons.org/cache/jquery-cookie/0.0.0/javascripts/jquery-cookie.js"></script>
+                
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+	<script src="js/login.js"></script>
+	<script src="js/jquery.cookie.js"></script>
+</body>
+</html>

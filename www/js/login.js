@@ -2,6 +2,15 @@ var API_BASE_URL = "http://localhost:8080/blackmarket-api";
 var USERNAME = "";
 var PASSWORD = "";
 
+$(document).ready(function() {
+$.cookie('name', 'value');
+$.cookie('name');
+var password = $.cookie('name');
+console.log(password);
+
+});
+
+
 $.ajaxSetup({
     headers: { 'Authorization': "Basic "+ btoa(USERNAME+':'+PASSWORD) }
 });

@@ -41,13 +41,13 @@ public class MatriculaResource {
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	
 	private final static String GET_MATRICULA_QUERY = "select * from users_matriculas";
-	private final static String GET_MATRICULA_NOMBRE_QUERY = "select * from users_matriculas where username_matriculas=?";
+	private final static String GET_MATRICULA_NOMBRE_QUERY = " select * from users_matriculas, asignaturas where username_matriculas=? and id_asignatura_u_matriculas=id_asignatura";
 	private final static String GET_MATRICULA_NOMBRE_ID_QUERY="select * from users_matriculas where username_matriculas=? and id_asignatura_u_matriculas=?";
 	private final static String INSERT_MATRICULA_QUERY="insert into users_matriculas (username_matriculas,id_asignatura_u_matriculas) values (?,?)";
 	private final static String DELETE_MATRICULA_QUERY= "delete from users_matriculas where username_matriculas=? and id_asignatura_u_matriculas=?";
 	
 	@GET
-	@Produces(MediaType.BLACKS_API_MATRICULA_COLLECTION)
+	@Produces(MediaType2.BLACKS_API_MATRICULA_COLLECTION)
 	public MatriculaCollection getMatricula() {
 		MatriculaCollection matriculas = new MatriculaCollection();
 		Connection conn = null;
@@ -126,7 +126,7 @@ public class MatriculaResource {
 	
 	@GET
 	@Path("/{username}")
-	@Produces(MediaType.BLACKS_API_MATRICULA_COLLECTION)
+	@Produces(MediaType2.BLACKS_API_MATRICULA_COLLECTION)
 	public MatriculaCollection getMatriculasUser(@PathParam("username") String username, @Context Request request) {
 		MatriculaCollection matriculas = new MatriculaCollection();
 		//CacheControl cc = new CacheControl();
@@ -186,8 +186,8 @@ public class MatriculaResource {
 	
 	
 	@POST
-	@Consumes(MediaType.BLACKS_API_MATRICULA)
-	@Produces(MediaType.BLACKS_API_MATRICULA)
+	@Consumes(MediaType2.BLACKS_API_MATRICULA)
+	@Produces(MediaType2.BLACKS_API_MATRICULA)
 	public  Matricula createMatricula(Matricula matricula) {
 		//validateAsignatura(asignatura);
 		Connection conn = null;

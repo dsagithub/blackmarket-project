@@ -11,15 +11,29 @@ import org.glassfish.jersey.linking.InjectLinks;
 import org.glassfish.jersey.linking.InjectLink.Style;
 
 
+import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.BlackResource;
+import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.MediaType2;
+
+
 
 
 
 public class BlackCollection {
 
-	//@InjectLinks({
-		//@InjectLink(resource = StingResource.class, style = Style.ABSOLUTE, rel = "create-sting", title = "Create sting", type = MediaType.BEETER_API_STING),
-		//@InjectLink(value = "/stings?before={before}", style = Style.ABSOLUTE, rel = "previous", title = "Previous stings", type = MediaType.BEETER_API_STING_COLLECTION, bindings = { @Binding(name = "before", value = "${instance.oldestTimestamp}") }),
-		//@InjectLink(value = "/stings?after={after}", style = Style.ABSOLUTE, rel = "current", title = "Newest stings", type = MediaType.BEETER_API_STING_COLLECTION, bindings = { @Binding(name = "after", value = "${instance.newestTimestamp}") }) })
+	@InjectLinks({
+		@InjectLink(resource = BlackResource.class, style = Style.ABSOLUTE, rel = "create-black", title = "Create black", type = MediaType2.BLACKS_API_BLACK),
+		@InjectLink(value = "/search/autor/{nombreautor}?before={before}", style = Style.ABSOLUTE, rel = "previous", title = "Previous black", type = MediaType2.BLACKS_API_BLACK_COLLECTION, bindings = {
+				@Binding(name = "before", value = "${instance.oldestTimestamp}"),
+				@Binding(name = "nombreautor", value = "${instance.pattern}") }),
+		@InjectLink(value = "/search/autor/{nombreautor}?after={after}", style = Style.ABSOLUTE, rel = "current", title = "Newest black", type = MediaType2.BLACKS_API_BLACK_COLLECTION, bindings = {
+				@Binding(name = "after", value = "${instance.newestTimestamp}"),
+				@Binding(name = "nombreautor", value = "${instance.pattern}") }),
+@InjectLink(value = "/search/titulo/{titulo}?after={after}", style = Style.ABSOLUTE, rel = "current", title = "Newest black", type = MediaType2.BLACKS_API_BLACK_COLLECTION, bindings = {
+		@Binding(name = "after", value = "${instance.newestTimestamp}"),
+		@Binding(name = "titulo", value = "${instance.pattern}") }),
+@InjectLink(value = "/search/titulo/{titulo}?before={before}", style = Style.ABSOLUTE, rel = "previous", title = "Previous black", type = MediaType2.BLACKS_API_BLACK_COLLECTION, bindings = {
+				@Binding(name = "before", value = "${instance.oldestTimestamp}"),
+				@Binding(name = "titulo", value = "${instance.pattern}") })})
 private String pattern;
 private List<Link> links;
 private List<Black> blacks;

@@ -19,8 +19,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 
 import javax.sql.DataSource;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.ForbiddenException;
@@ -29,6 +31,7 @@ import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.ServerErrorException;
@@ -42,7 +45,18 @@ import javax.ws.rs.core.SecurityContext;
 
 
 
+
+
+
+
+
+
+
+
+
+import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.Asignatura;
 import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.Black;
+import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.BlackCollection;
 
 
 
@@ -54,20 +68,28 @@ public class BlackResource {
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	
 	private String GET_BLACK_QUERY_ASIGNATURA = "SELECT * FROM contenidos id_asignatura=? and id_tipo=?";
-	//He a�adido esta 
+	private String GET_BLACK_QUERY = "SELECT * FROM contenidos id_contenido=?";
+
 	private String GET_BLACK_QUERY_CONTENIDO = "SELECT * FROM contenidos";
 	private String GET_BLACK_QUERY_MATRICULADAS = "select * from contenidos, users_matriculas where username_matriculas=? and id_asignatura_u_matriculas=id_asignatura";
 	private String GET_BLACK_QUERY_TITULO = "SELECT * FROM contenidos where titulo=?";
+	
 	private String GET_BLACK_QUERY_AUTOR_FROM_LAST = "select c.* from contenidos c where autor LIKE ? and c.fecha > ? order by fecha";
 	private String GET_BLACKS_QUERY_AUTOR = "select c.* from contenidos c where autor LIKE ? and c.fecha < ifnull ( ?, now()) order by fecha desc limit ?";
+	private String GET_BLACK_QUERY_TITULO_FROM_LAST = "select c.* from contenidos c where titulo LIKE ? and c.fecha > ? order by fecha";
+	private String GET_BLACKS_QUERY_TITULO = "select c.* from contenidos c where titulo LIKE ? and c.fecha < ifnull ( ?, now()) order by fecha desc limit ?";
+	
+	
+	
 	private String GET_BLACK_QUERY_USUARIO = "SELECT * FROM contenidos where id_usuario=?";
 	private String INSERT_BLACK_QUERY = "insert into contenidos (id_contenido,id_asignatura,id_tipo,titulo,descripcion,autor) values (?,?,?,?,?,?)";
-	
+	private String DELETE_BLACK_QUERY = "delete from contenidos where id_contenido=?";
+	private String UPDATE_BLACK_QUERY= "update contenidos set  titulo=ifnull(?, titulo), descripcion=ifnull(?, descripcion), autor=ifnull(?, autor) where id_contenido=?";
 	//@Context
 	//private SecurityContext security;
-	/*
+	
 	@GET
-	//@Produces(MediaType.BLACKS_API_BLACK_COLLECTION)
+	@Produces(MediaType2.BLACKS_API_BLACK_COLLECTION)
 	public BlackCollection getBlacks() {
 		BlackCollection blacks = new BlackCollection();
 	 
@@ -107,92 +129,8 @@ public class BlackResource {
 			}
 		}
 		return blacks;
-	}*/
-	
-	/*
-	@Context
-	private Application app;
-	private SecurityContext security;
-	
-	@POST
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Black uploadBlack(//@FormDataParam("titulo") String idphoto,
-			@FormDataParam("idtipo") int username,
-			@FormDataParam("idasignatura") int autor,
-			@FormDataParam("descripcion") String name,
-			@FormDataParam("autor") String description,
-			@FormDataParam("idcontenido") InputStream image,
-			@FormDataParam("idcontenido") FormDataContentDisposition fileDisposition) {
-		UUID uuid = writeAndConvertImage(image);
-
-		Connection conn = null;
-		try {
-			conn = ds.getConnection();
-		} catch (SQLException e) {
-			throw new ServerErrorException("Could not connect to the database",
-					Response.Status.SERVICE_UNAVAILABLE);
-		}
-		PreparedStatement stmt = null;
-		try {
-			stmt = conn.prepareStatement("insert into Photos (idphoto, "
-					+ "username, autor, name, description) "
-					+ "values(?,?,?,?,?)");
-			
-			stmt.setString(1, uuid.toString());
-			stmt.setInt(2, username);
-			stmt.setInt(3, autor);
-			stmt.setString(4, name);
-			stmt.setString(5, description);
-			stmt.executeUpdate();
-		} catch (SQLException e) {
-			throw new ServerErrorException(e.getMessage(),
-					Response.Status.INTERNAL_SERVER_ERROR);
-		} finally {
-			try {
-				if (stmt != null)
-					stmt.close();
-				conn.close();
-			} catch (SQLException e) {
-			}
-		}
-		Black imageData = new Black();
-		imageData.setId_contenido(uuid.toString() + ".png");
-
-
-		return imageData;
 	}
-	
-	private UUID writeAndConvertImage(InputStream file) {
 
-		BufferedImage image = null;
-		try {
-			image = ImageIO.read(file);
-
-		} catch (IOException e) {
-			throw new InternalServerErrorException(
-					"Something has been wrong when reading the file.");
-		}
-		UUID uuid = UUID.randomUUID();
-		String filename = uuid.toString() + ".png";
-		try {
-			ImageIO.write(image,"png",new File(app.getProperties().get("uploadFolder") + filename));
-			
-		} catch (IOException e) {
-			throw new InternalServerErrorException(
-					"Something has been wrong when converting the file.");
-		}
-
-		return uuid;
-	}
-	
-	
-	
-	
-	*/
-	
-
-	
-	
 	@Context
 	private Application app;
 	private SecurityContext security;
@@ -287,16 +225,61 @@ public class BlackResource {
 	*/
 	
 	
+	private Black getBlackFromDatabase(String idcontenido) {
+		Black black = new Black();
+
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+		} catch (SQLException e) {
+			throw new ServerErrorException("Could not connect to the database",
+					Response.Status.SERVICE_UNAVAILABLE);
+		}
+
+		PreparedStatement stmt = null;
+		try {
+			stmt = conn.prepareStatement(GET_BLACK_QUERY );
+			stmt.setString(1, idcontenido);
+			ResultSet rs = stmt.executeQuery();
+			if (rs.next()) {
+				
+				black.setId_contenido(rs.getString("id_contenido"));
+				black.setId_asignatura(rs.getInt("id_asignatura"));
+				black.setId_tipo(rs.getInt("id_tipo"));
+				black.setTitulo(rs.getString("titulo"));
+				black.setDescripcion(rs.getString("descripcion"));
+				//black.setFecha(rs.getFecha("fecha").getTime());
+				black.setAutor(rs.getString("autor"));
+				black.setInvalid(rs.getInt("invalid"));
+			} else {
+				throw new NotFoundException("There's no sting with stingid="
+						+ idcontenido);
+			}
+
+		} catch (SQLException e) {
+			throw new ServerErrorException(e.getMessage(),
+					Response.Status.INTERNAL_SERVER_ERROR);
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+			}
+		}
+
+		return black;
+	}	
 	
 	
 	
 	
-	/*
+
 
 	@GET
-	@Path("/search/{nombreautor}")
-	@Produces(MediaType.BLACKS_API_BLACK_COLLECTION)
-	public BlackCollection getBlack(
+	@Path("/search/autor/{nombreautor}")
+	@Produces(MediaType2.BLACKS_API_BLACK_COLLECTION)
+	public BlackCollection getBlackAutor(
 			@PathParam("nombreautor") String nombreautor,
 			@QueryParam("length") int length,
 			@QueryParam("before") long before, @QueryParam("after") long after) {
@@ -337,13 +320,13 @@ public class BlackResource {
 			long oldestTimestamp = 0;
 			while (rs.next()) {
 				Black black = new Black();
-				black.setId_contenido(rs.getInt("id_contenido"));
+				black.setId_contenido(rs.getString("id_contenido"));
 				black.setId_asignatura(rs.getInt("id_asignatura"));
 				black.setId_tipo(rs.getInt("id_tipo"));
 				black.setTitulo(rs.getString("titulo"));
 				black.setDescripcion(rs.getString("descripcion"));
 				black.setAutor(rs.getString("autor"));
-				black.setLink(rs.getString("link"));
+				//black.setLink(rs.getString("link"));
 				black.setInvalid(rs.getInt("invalid"));
 				black.setFecha(rs.getTimestamp("fecha").getTime());
 				oldestTimestamp = rs.getTimestamp("fecha").getTime();
@@ -369,5 +352,187 @@ public class BlackResource {
 		}
 
 		return coleccionblack;
-	}*/
+	}
+
+@GET
+@Path("/search/titulo/{titulo}")
+@Produces(MediaType2.BLACKS_API_BLACK_COLLECTION)
+public BlackCollection getBlackTitulo(
+		@PathParam("titulo") String titulo,
+		@QueryParam("length") int length,
+		@QueryParam("before") long before, @QueryParam("after") long after){
+	BlackCollection coleccionblack = new BlackCollection();
+	coleccionblack.setPattern(titulo);
+
+	Connection conn = null;
+	try {
+		conn = ds.getConnection();
+	} catch (SQLException e) {
+		throw new ServerErrorException("Could not connect to the database",
+				Response.Status.SERVICE_UNAVAILABLE);
+	}
+	PreparedStatement stmt = null;
+	try {
+		boolean updateFromLast = after > 0;
+		stmt = updateFromLast ? conn
+				.prepareStatement(GET_BLACK_QUERY_TITULO_FROM_LAST ) : conn
+				.prepareStatement(GET_BLACKS_QUERY_TITULO);
+		stmt.setString(1, '%' + titulo + '%');
+
+		if (updateFromLast) {
+			stmt.setTimestamp(2, new Timestamp(after));
+
+		} else {
+			if (before > 0) {
+				stmt.setTimestamp(2, new Timestamp(before));
+
+			} else
+				stmt.setTimestamp(2, null);
+			length = (length <= 0) ? 5 : length;
+			stmt.setInt(3, length);
+		}
+
+		ResultSet rs = stmt.executeQuery();
+
+		boolean first = true;
+		long oldestTimestamp = 0;
+		while (rs.next()) {
+			Black black = new Black();
+			black.setId_contenido(rs.getString("id_contenido"));
+			black.setId_asignatura(rs.getInt("id_asignatura"));
+			black.setId_tipo(rs.getInt("id_tipo"));
+			black.setTitulo(rs.getString("titulo"));
+			black.setDescripcion(rs.getString("descripcion"));
+			black.setAutor(rs.getString("autor"));
+			//black.setLink(rs.getString("link"));
+			black.setInvalid(rs.getInt("invalid"));
+			black.setFecha(rs.getTimestamp("fecha").getTime());
+			oldestTimestamp = rs.getTimestamp("fecha").getTime();
+			black.setFecha(oldestTimestamp);
+			if (first) {
+				first = false;
+				coleccionblack.setNewestTimestamp(black.getFecha());
+			}
+			coleccionblack.addBlack(black);
+		}
+		coleccionblack.setOldestTimestamp(oldestTimestamp);
+
+	} catch (SQLException e) {
+		throw new ServerErrorException(e.getMessage(),
+				Response.Status.INTERNAL_SERVER_ERROR);
+	} finally {
+		try {
+			if (stmt != null)
+				stmt.close();
+			conn.close();
+		} catch (SQLException e) {
+		}
+	}
+
+	return coleccionblack;
+}
+
+
+
+@DELETE
+@Path("/{idcontenido}")
+public void deleteBlack(@PathParam("idcontenido") String idcontenido) {
+	//validateUser(idasignatura);
+	Connection conn = null;
+	try {
+		conn = ds.getConnection();
+	} catch (SQLException e) {
+		throw new ServerErrorException("Could not connect to the database",
+				Response.Status.SERVICE_UNAVAILABLE);
+	}
+
+	PreparedStatement stmt = null;
+	try {
+		stmt = conn.prepareStatement(DELETE_BLACK_QUERY);
+		stmt.setString(1, idcontenido);
+
+		int rows = stmt.executeUpdate();
+		if (rows == 0)
+			throw new NotFoundException("There's no sting with stingid="
+					+ idcontenido);// Deleting inexistent sting
+	} catch (SQLException e) {
+		throw new ServerErrorException(e.getMessage(),
+				Response.Status.INTERNAL_SERVER_ERROR);
+	} finally {
+		try {
+			if (stmt != null)
+				stmt.close();
+			conn.close();
+		} catch (SQLException e) {
+		}
+	}
+}
+
+
+@PUT
+@Path("/{idcontenido}")
+@Consumes(MediaType2.BLACKS_API_BLACK)
+@Produces(MediaType2.BLACKS_API_BLACK)
+public Black updateBlack(@PathParam("idcontenido") String idcontenido, Black black) {
+	//validateUser(stingid);
+	validateUpdateBlack(black);
+	Connection conn = null;
+	try {
+		conn = ds.getConnection();
+	} catch (SQLException e) {
+		throw new ServerErrorException("Could not connect to the database",
+				Response.Status.SERVICE_UNAVAILABLE);
+	}
+
+	PreparedStatement stmt = null;
+	try {
+		stmt = conn.prepareStatement(UPDATE_BLACK_QUERY);
+		//stmt.setInt(1, black.getId_asignatura());
+		//stmt.setInt(2, black.getId_tipo());
+		stmt.setString(1, black.getTitulo());
+		stmt.setString(2, black.getDescripcion());
+		stmt.setString(3, black.getAutor());
+		stmt.setString(4, idcontenido);
+
+		int rows = stmt.executeUpdate();
+		if (rows == 1)
+			black = getBlackFromDatabase(idcontenido);
+		else {
+			throw new NotFoundException("There's no sting with id_asignatura="
+					+ idcontenido);
+		}
+
+	} catch (SQLException e) {
+		throw new ServerErrorException(e.getMessage(),
+				Response.Status.INTERNAL_SERVER_ERROR);
+	} finally {
+		try {
+			if (stmt != null)
+				stmt.close();
+			conn.close();
+		} catch (SQLException e) {
+		}
+	}
+
+	return black;
+}
+
+
+private void validateUpdateBlack(Black black) {
+	/*if (black.getId_asignatura() != null && black.getId_asignatura().length() > 20)
+		throw new BadRequestException(
+				"Nombre can't be greater than 20 characters.");
+	if (black.getCurso() != null && black.getCurso().length() > 4)
+		throw new BadRequestException(
+				"Curso can't be greater than 4 characters.");*/
+}
+
+
+
+
+
+
+
+
+
 }

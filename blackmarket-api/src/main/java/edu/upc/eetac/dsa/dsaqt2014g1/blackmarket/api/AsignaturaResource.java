@@ -35,7 +35,7 @@ public class AsignaturaResource {
 	private final static String DELETE_ASIGNATURAS_QUERY= "delete from asignaturas where id_asignatura=?";
 	private final static String UPDATE_ASIGNATURA_QUERY= "update asignaturas set nombre=ifnull(?, nombre), curso=ifnull(?, curso) where id_asignatura=?";
 	@GET
-	@Produces(MediaType.BLACKS_API_ASIGNATURA_COLLECTION)
+	@Produces(MediaType2.BLACKS_API_ASIGNATURA_COLLECTION)
 	public AsignaturaCollection getAsignatura() {
 		AsignaturaCollection asignaturas = new AsignaturaCollection();
 		Connection conn = null;
@@ -115,8 +115,8 @@ public class AsignaturaResource {
 	
 	
 	@POST
-	@Consumes(MediaType.BLACKS_API_ASIGNATURA)
-	@Produces(MediaType.BLACKS_API_ASIGNATURA)
+	@Consumes(MediaType2.BLACKS_API_ASIGNATURA)
+	@Produces(MediaType2.BLACKS_API_ASIGNATURA)
 	public Asignatura createAsignatura(Asignatura asignatura) {
 		validateAsignatura(asignatura);
 		Connection conn = null;
@@ -213,8 +213,8 @@ public class AsignaturaResource {
 	
 	@PUT
 	@Path("/{idasignatura}")
-	@Consumes(MediaType.BLACKS_API_ASIGNATURA)
-	@Produces(MediaType.BLACKS_API_ASIGNATURA)
+	@Consumes(MediaType2.BLACKS_API_ASIGNATURA)
+	@Produces(MediaType2.BLACKS_API_ASIGNATURA)
 	public Asignatura updateAsignatura(@PathParam("idasignatura") String idasignatura, Asignatura asignatura) {
 		//validateUser(stingid);
 		validateUpdateAsignatura(asignatura);

@@ -16,7 +16,7 @@ public class WebApplicationExceptionMapper implements
 		BlackError error = new BlackError(
 				exception.getResponse().getStatus(), exception.getMessage());
 		return Response.status(error.getStatus()).entity(error)
-				.type(MediaType.BLACKS_API_ERROR).build();
+				.type(MediaType2.BLACKS_API_ERROR).build();
 	}
  
 }

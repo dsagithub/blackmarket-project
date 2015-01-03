@@ -82,7 +82,7 @@ public class UserResource {
 	
 	@GET
 	@Path("/{username}")
-	@Produces(MediaType.BLACKS_API_USER)
+	@Produces(MediaType2.BLACKS_API_USER)
 	public Response getSting(@PathParam("username") String username, @Context Request request) {
 		User usuario = new User();
 		CacheControl cc = new CacheControl();
@@ -99,8 +99,8 @@ public class UserResource {
 	
 	
 	@POST
-	@Consumes(MediaType.BLACKS_API_USER)
-	@Produces(MediaType.BLACKS_API_USER_COLLECTION)
+	@Consumes(MediaType2.BLACKS_API_USER)
+	@Produces(MediaType2.BLACKS_API_USER_COLLECTION)
 	public User createUser(User user) {
 		validateUser(user);
  
@@ -212,8 +212,8 @@ public class UserResource {
  
 	@Path("/login")
 	@POST
-	@Produces(MediaType.BLACKS_API_USER)
-	@Consumes(MediaType.BLACKS_API_USER_COLLECTION)
+	@Produces(MediaType2.BLACKS_API_USER)
+	@Consumes(MediaType2.BLACKS_API_USER_COLLECTION)
 	public User login(User user) {
 		if (user.getUsername() == "" || user.getPassword() == "")
 			throw new BadRequestException(

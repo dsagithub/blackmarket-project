@@ -23,7 +23,7 @@ private int id_tipo;
 private String titulo;
 private String descripcion;
 private String autor;
-private String link;
+//private String link;
 private int invalid;
 private long fecha;
 private long creationTimestamp;
@@ -77,12 +77,12 @@ public String getAutor() {
 public void setAutor(String autor) {
 	this.autor = autor;
 }
-public String getLink() {
+/*public String getLink() {
 	return link;
 }
 public void setLink(String link) {
 	this.link = link;
-}
+}*/
 public int getInvalid() {
 	return invalid;
 }

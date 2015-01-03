@@ -36,8 +36,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.ServerErrorException;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+
+
 
 
 
@@ -57,6 +60,8 @@ import javax.ws.rs.core.SecurityContext;
 import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.Asignatura;
 import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.Black;
 import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.BlackCollection;
+import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.Matricula;
+import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.MatriculaCollection;
 
 
 
@@ -71,7 +76,7 @@ public class BlackResource {
 	private String GET_BLACK_QUERY = "SELECT * FROM contenidos id_contenido=?";
 
 	private String GET_BLACK_QUERY_CONTENIDO = "SELECT * FROM contenidos";
-	private String GET_BLACK_QUERY_MATRICULADAS = "select * from contenidos, users_matriculas where username_matriculas=? and id_asignatura_u_matriculas=id_asignatura";
+	private String GET_BLACK_QUERY_MATRICULADAS = "select * from contenidos, users_matriculas where username_matriculas=? and id_asignatura_u_matriculas=id_asignatura and limit=5";
 	private String GET_BLACK_QUERY_TITULO = "SELECT * FROM contenidos where titulo=?";
 	
 	private String GET_BLACK_QUERY_AUTOR_FROM_LAST = "select c.* from contenidos c where autor LIKE ? and c.fecha > ? order by fecha";
@@ -130,6 +135,73 @@ public class BlackResource {
 		}
 		return blacks;
 	}
+	
+	private BlackCollection getBlacksFromDatabase(String username) {
+		BlackCollection blacks = new BlackCollection();
+
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+		} catch (SQLException e) {
+			throw new ServerErrorException("Could not connect to the database",
+					Response.Status.SERVICE_UNAVAILABLE);
+		}
+
+		PreparedStatement stmt = null;
+		try {
+			stmt = conn.prepareStatement(GET_BLACK_QUERY_MATRICULADAS);
+			stmt.setString(1, username);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				Black black = new Black();
+				//matricula.setUsername_matriculas(rs.getString("username_matriculas"));
+				black.setId_contenido(rs.getString("id_contenido"));
+				black.setId_asignatura(rs.getInt("id_asignatura"));
+				black.setId_tipo(rs.getInt("id_tipo"));
+				black.setTitulo(rs.getString("titulo"));
+				black.setDescripcion(rs.getString("descripcion"));
+				black.setAutor(rs.getString("autor"));
+				black.setFecha(rs.getTimestamp("fecha").getTime());
+				blacks.addBlack(black);
+				
+			}
+
+		} catch (SQLException e) {
+			throw new ServerErrorException(e.getMessage(),
+					Response.Status.INTERNAL_SERVER_ERROR);
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+			}
+		}
+
+		return blacks;
+	}
+	
+	@GET
+	@Path("/{username}")
+	@Produces(MediaType2.BLACKS_API_BLACK_COLLECTION)
+	public BlackCollection getBlacksUser(@PathParam("username") String username, @Context Request request) {
+		BlackCollection blacks = new BlackCollection();
+		//CacheControl cc = new CacheControl();
+		blacks = getBlacksFromDatabase(username);		
+		//String referencia = DigestUtils.md5Hex(matriculas.setUsername_matriculas());
+		//EntityTag eTag = new EntityTag(referencia);
+		//Response.ResponseBuilder rb = request.evaluatePreconditions(eTag); 
+		//if (rb != null) {
+			//return rb.cacheControl(cc).tag(eTag).build();
+		//}
+		//rb = Response.ok(matriculas).cacheControl(cc).tag(eTag);	 
+		return blacks;
+	}
+	
+	
+	
+	
+
 
 	@Context
 	private Application app;

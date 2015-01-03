@@ -1,4 +1,4 @@
-package edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model;
+ package edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model;
 
 import java.util.ArrayList;
 import java.util.List;

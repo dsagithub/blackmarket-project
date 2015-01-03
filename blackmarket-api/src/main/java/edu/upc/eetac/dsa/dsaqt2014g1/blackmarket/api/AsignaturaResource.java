@@ -19,10 +19,14 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.ServerErrorException;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 
 import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.Asignatura;
 import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.AsignaturaCollection;
+import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.Matricula;
+import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.MatriculaCollection;
 
 @Path("/asignatura")
 public class AsignaturaResource {
@@ -73,6 +77,45 @@ public class AsignaturaResource {
 		return asignaturas;
 	}
 	
+	private AsignaturaCollection getAsignaturasFromDatabase(String idasignatura) {
+		AsignaturaCollection asignaturas = new AsignaturaCollection();
+
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+		} catch (SQLException e) {
+			throw new ServerErrorException("Could not connect to the database",
+					Response.Status.SERVICE_UNAVAILABLE);
+		}
+
+		PreparedStatement stmt = null;
+		try {
+			stmt = conn.prepareStatement(GET_ASIGNATURAS_ID_QUERY);
+			stmt.setString(1, idasignatura);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				Asignatura asignatura= new Asignatura();
+				//matricula.setUsername_matriculas(rs.getString("username_matriculas"));
+				asignatura.setId_asignatura(rs.getInt("id_asignatura"));
+				asignaturas.addAsignatura(asignatura);
+				
+			}
+
+		} catch (SQLException e) {
+			throw new ServerErrorException(e.getMessage(),
+					Response.Status.INTERNAL_SERVER_ERROR);
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+			}
+		}
+
+		return asignaturas;
+	}
+	
 	private Asignatura getAsignaturaFromDatabase(String idasignatura) {
 		Asignatura asignatura = new Asignatura();
 
@@ -111,6 +154,24 @@ public class AsignaturaResource {
 		}
 
 		return asignatura;
+	}
+	
+	
+	@GET
+	@Path("/{idasignatura}")
+	@Produces(MediaType2.BLACKS_API_MATRICULA_COLLECTION)
+	public Asignatura getAsignaturaUser(@PathParam("idasignatura") String idasignatura, @Context Request request) {
+		Asignatura asignaturas = new Asignatura();
+		//CacheControl cc = new CacheControl();
+		asignaturas = getAsignaturaFromDatabase(idasignatura);		
+		//String referencia = DigestUtils.md5Hex(matriculas.setUsername_matriculas());
+		//EntityTag eTag = new EntityTag(referencia);
+		//Response.ResponseBuilder rb = request.evaluatePreconditions(eTag); 
+		//if (rb != null) {
+			//return rb.cacheControl(cc).tag(eTag).build();
+		//}
+		//rb = Response.ok(matriculas).cacheControl(cc).tag(eTag);	 
+		return asignaturas;
 	}
 	
 	

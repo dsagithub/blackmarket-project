@@ -164,6 +164,7 @@ public class MatriculaResource {
 				matricula.setUsername_matriculas(rs.getString("username_matriculas"));
 				matricula.setId_asignatura_u_matriculas(rs.getInt("id_asignatura_u_matriculas"));
 				
+				
 			} else {
 				throw new NotFoundException("There's no matricula with nombre="
 						+ username + "and id"+ idmatricula);

@@ -97,6 +97,8 @@ public class AsignaturaResource {
 				Asignatura asignatura= new Asignatura();
 				//matricula.setUsername_matriculas(rs.getString("username_matriculas"));
 				asignatura.setId_asignatura(rs.getInt("id_asignatura"));
+				asignatura.setNombre(rs.getString("nombre"));
+				asignatura.setCurso(rs.getString("curso"));
 				asignaturas.addAsignatura(asignatura);
 				
 			}
@@ -159,7 +161,7 @@ public class AsignaturaResource {
 	
 	@GET
 	@Path("/{idasignatura}")
-	@Produces(MediaType2.BLACKS_API_ASIGNATURA_COLLECTION)
+	@Produces(MediaType2.BLACKS_API_ASIGNATURA)
 	public Asignatura getAsignaturaUser(@PathParam("idasignatura") String idasignatura, @Context Request request) {
 		Asignatura asignaturas = new Asignatura();
 		//CacheControl cc = new CacheControl();

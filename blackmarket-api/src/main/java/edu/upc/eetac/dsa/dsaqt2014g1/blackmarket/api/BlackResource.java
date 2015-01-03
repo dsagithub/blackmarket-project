@@ -87,9 +87,10 @@ public class BlackResource {
 	
 	
 	private String GET_BLACK_QUERY_USUARIO = "SELECT * FROM contenidos where id_usuario=?";
-	private String INSERT_BLACK_QUERY = "insert into contenidos (id_contenido,id_asignatura,id_tipo,titulo,descripcion,autor) values (?,?,?,?,?,?)";
+	private String INSERT_BLACK_QUERY = "insert into contenidos (id_contenido,id_asignatura,id_tipo,titulo,descripcion,autor,invalid) values (?,?,?,?,?,?,'0')";
 	private String DELETE_BLACK_QUERY = "delete from contenidos where id_contenido=?";
 	private String UPDATE_BLACK_QUERY= "update contenidos set  titulo=ifnull(?, titulo), descripcion=ifnull(?, descripcion), autor=ifnull(?, autor) where id_contenido=?";
+	private String UPDATE_INVALID_QUERY= "update contenidos set  invalid=invalid+1 where id_contenido=?";
 	//@Context
 	//private SecurityContext security;
 	
@@ -217,7 +218,7 @@ public class BlackResource {
 			@FormDataParam("id_contenido") InputStream id_contenido,
 			@FormDataParam("id_contenido") FormDataContentDisposition fileDisposition) {
 		UUID uuid = writeAndConvertImage(id_contenido);
-
+		//int a=0;
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
@@ -227,13 +228,14 @@ public class BlackResource {
 		}
 		PreparedStatement stmt = null;
 		try {
-			stmt = conn.prepareStatement("insert into contenidos (id_contenido,id_asignatura,id_tipo,titulo,descripcion,autor) values (?,?,?,?,?,?)");
+			stmt = conn.prepareStatement(INSERT_BLACK_QUERY);
 			stmt.setString(1, uuid.toString());
 			stmt.setInt(2, id_asignatura);
 			stmt.setInt(3, id_tipo);
 			stmt.setString(4, titulo);
 			stmt.setString(5, descripcion);
 			stmt.setString(6, autor);
+			//stmt.setInt(7,a);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
 			throw new ServerErrorException(e.getMessage(),
@@ -595,6 +597,49 @@ private void validateUpdateBlack(Black black) {
 	if (black.getCurso() != null && black.getCurso().length() > 4)
 		throw new BadRequestException(
 				"Curso can't be greater than 4 characters.");*/
+}
+
+
+@PUT
+@Path("/invalid/{idcontenido}")
+@Consumes(MediaType2.BLACKS_API_BLACK)
+@Produces(MediaType2.BLACKS_API_BLACK)
+public Black updateInvalid(@PathParam("idcontenido") String idcontenido, Black black) {
+	//validateUser(stingid);
+	validateUpdateBlack(black);
+	Connection conn = null;
+	try {
+		conn = ds.getConnection();
+	} catch (SQLException e) {
+		throw new ServerErrorException("Could not connect to the database",
+				Response.Status.SERVICE_UNAVAILABLE);
+	}
+
+	PreparedStatement stmt = null;
+	try {
+		stmt = conn.prepareStatement(UPDATE_INVALID_QUERY);
+		stmt.setString(1, idcontenido);
+		int rows = stmt.executeUpdate();
+		if (rows == 1)
+			black = getBlackFromDatabase(idcontenido);
+		else {
+			throw new NotFoundException("There's no sting with id_asignatura="
+					+ idcontenido);
+		}
+
+	} catch (SQLException e) {
+		throw new ServerErrorException(e.getMessage(),
+				Response.Status.INTERNAL_SERVER_ERROR);
+	} finally {
+		try {
+			if (stmt != null)
+				stmt.close();
+			conn.close();
+		} catch (SQLException e) {
+		}
+	}
+
+	return black;
 }
 
 

@@ -487,8 +487,6 @@ public Black updateBlack(@PathParam("idcontenido") String idcontenido, Black bla
 	PreparedStatement stmt = null;
 	try {
 		stmt = conn.prepareStatement(UPDATE_BLACK_QUERY);
-		//stmt.setInt(1, black.getId_asignatura());
-		//stmt.setInt(2, black.getId_tipo());
 		stmt.setString(1, black.getTitulo());
 		stmt.setString(2, black.getDescripcion());
 		stmt.setString(3, black.getAutor());

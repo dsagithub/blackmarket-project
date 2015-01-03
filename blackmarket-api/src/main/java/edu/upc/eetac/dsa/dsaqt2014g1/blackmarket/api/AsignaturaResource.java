@@ -159,7 +159,7 @@ public class AsignaturaResource {
 	
 	@GET
 	@Path("/{idasignatura}")
-	@Produces(MediaType2.BLACKS_API_MATRICULA_COLLECTION)
+	@Produces(MediaType2.BLACKS_API_ASIGNATURA_COLLECTION)
 	public Asignatura getAsignaturaUser(@PathParam("idasignatura") String idasignatura, @Context Request request) {
 		Asignatura asignaturas = new Asignatura();
 		//CacheControl cc = new CacheControl();

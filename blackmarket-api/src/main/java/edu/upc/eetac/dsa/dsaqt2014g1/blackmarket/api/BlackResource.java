@@ -76,7 +76,7 @@ public class BlackResource {
 	private String GET_BLACK_QUERY = "SELECT * FROM contenidos id_contenido=?";
 
 	private String GET_BLACK_QUERY_CONTENIDO = "SELECT * FROM contenidos";
-	private String GET_BLACK_QUERY_MATRICULADAS = "select * from contenidos, users_matriculas where username_matriculas=? and id_asignatura_u_matriculas=id_asignatura and limit=5";
+	private String GET_BLACK_QUERY_MATRICULADAS = "select * from contenidos, users_matriculas where username_matriculas=? and id_asignatura_u_matriculas=id_asignatura and limit='5'";
 	private String GET_BLACK_QUERY_TITULO = "SELECT * FROM contenidos where titulo=?";
 	
 	private String GET_BLACK_QUERY_AUTOR_FROM_LAST = "select c.* from contenidos c where autor LIKE ? and c.fecha > ? order by fecha";

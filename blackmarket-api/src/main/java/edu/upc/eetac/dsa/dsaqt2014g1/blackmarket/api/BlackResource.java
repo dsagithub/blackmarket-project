@@ -73,7 +73,7 @@ public class BlackResource {
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	
 	private String GET_BLACK_QUERY_ASIGNATURA = "SELECT * FROM contenidos where id_asignatura=? and id_tipo=?";
-	private String GET_BLACK_QUERY = "SELECT * FROM contenidos id_contenido=?";
+	private String GET_BLACK_QUERY = "SELECT * FROM contenidos where id_contenido=?";
 
 	private String GET_BLACK_QUERY_CONTENIDO = "SELECT * FROM contenidos";
 	private String GET_BLACK_QUERY_MATRICULADAS = "select * from contenidos, users_matriculas where username_matriculas=? and id_asignatura_u_matriculas=id_asignatura order by fecha desc limit 5";
@@ -162,7 +162,7 @@ public class BlackResource {
 				black.setTitulo(rs.getString("titulo"));
 				black.setDescripcion(rs.getString("descripcion"));
 				black.setAutor(rs.getString("autor"));
-				black.setFecha(rs.getTimestamp("fecha").getTime());
+				black.setFecha(rs.getString("fecha"));
 				blacks.addBlack(black);
 				
 			}
@@ -182,6 +182,7 @@ public class BlackResource {
 		return blacks;
 	}
 	
+	
 	@GET
 	@Path("/{username}")
 	@Produces(MediaType2.BLACKS_API_BLACK_COLLECTION)
@@ -199,6 +200,26 @@ public class BlackResource {
 		return blacks;
 	}
 	
+	
+	
+	
+	
+	@GET
+	@Path("contenido/{idcontenido}")
+	@Produces(MediaType2.BLACKS_API_BLACK_COLLECTION)
+	public Black getBlacksPorId(@PathParam("idcontenido") String idcontenido, @Context Request request) {
+		Black black = new Black();
+		//CacheControl cc = new CacheControl();
+		black = getBlackFromDatabase(idcontenido);		
+		//String referencia = DigestUtils.md5Hex(matriculas.setUsername_matriculas());
+		//EntityTag eTag = new EntityTag(referencia);
+		//Response.ResponseBuilder rb = request.evaluatePreconditions(eTag); 
+		//if (rb != null) {
+			//return rb.cacheControl(cc).tag(eTag).build();
+		//}
+		//rb = Response.ok(matriculas).cacheControl(cc).tag(eTag);	 
+		return black;
+	}
 	
 	
 	
@@ -402,13 +423,13 @@ public class BlackResource {
 				black.setAutor(rs.getString("autor"));
 				//black.setLink(rs.getString("link"));
 				black.setInvalid(rs.getInt("invalid"));
-				black.setFecha(rs.getTimestamp("fecha").getTime());
-				oldestTimestamp = rs.getTimestamp("fecha").getTime();
-				black.setFecha(oldestTimestamp);
-				if (first) {
-					first = false;
-					coleccionblack.setNewestTimestamp(black.getFecha());
-				}
+				black.setFecha(rs.getString("fecha"));
+				//oldestTimestamp = rs.getTimestamp("fecha").getTime();
+				//black.setFecha(oldestTimestamp);
+				//if (first) {
+					//first = false;
+					//coleccionblack.setNewestTimestamp(black.getFecha());
+				//}
 				coleccionblack.addBlack(black);
 			}
 			coleccionblack.setOldestTimestamp(oldestTimestamp);
@@ -480,13 +501,13 @@ public BlackCollection getBlackTitulo(
 			black.setAutor(rs.getString("autor"));
 			//black.setLink(rs.getString("link"));
 			black.setInvalid(rs.getInt("invalid"));
-			black.setFecha(rs.getTimestamp("fecha").getTime());
-			oldestTimestamp = rs.getTimestamp("fecha").getTime();
+			black.setFecha(rs.getString("fecha"));
+			/*oldestTimestamp = rs.getTimestamp("fecha").getTime();
 			black.setFecha(oldestTimestamp);
 			if (first) {
 				first = false;
 				coleccionblack.setNewestTimestamp(black.getFecha());
-			}
+			}*/
 			coleccionblack.addBlack(black);
 		}
 		coleccionblack.setOldestTimestamp(oldestTimestamp);

@@ -25,7 +25,7 @@ private String descripcion;
 private String autor;
 //private String link;
 private int invalid;
-private long fecha;
+private String fecha;
 private long creationTimestamp;
 
 
@@ -89,10 +89,10 @@ public int getInvalid() {
 public void setInvalid(int invalid) {
 	this.invalid = invalid;
 }
-public long getFecha() {
+public String getFecha() {
 	return fecha;
 }
-public void setFecha(long fecha) {
+public void setFecha(String fecha) {
 	this.fecha = fecha;
 }
 

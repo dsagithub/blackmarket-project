@@ -200,13 +200,13 @@ public class AsignaturaResource {
 			stmt.setString(2, asignatura.getCurso());
 			stmt.executeUpdate();
 			ResultSet rs = stmt.getGeneratedKeys();
-			if (rs.next()) {
+			/*if (rs.next()) {
 				int stingid = rs.getInt(1);
 
 				asignatura = getAsignaturaFromDatabase(Integer.toString(stingid));
 			} else {
 				// Something has failed...
-			}
+			}*/
 		} catch (SQLException e) {
 			throw new ServerErrorException(e.getMessage(),
 					Response.Status.INTERNAL_SERVER_ERROR);

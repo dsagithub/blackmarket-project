@@ -14,6 +14,8 @@ public interface MediaType2 {
 	public final static String BLACKS_API_MATRICULA= "application/vnd.blackmarket.api.matricula+json";
 	public final static String BLACKS_API_MATRICULA_COLLECTION= "application/vnd.blackmarket.api.matricula.collection+json";
 	
+	public final static String BLACKS_API_COMENTARIO= "application/vnd.blackmarket.api.comentario+json";
+	public final static String BLACKS_API_COMENTARIO_COLLECTION= "application/vnd.blackmarket.api.comentario.collection+json";
 	
 	public final static String BLACKS_API_ERROR = "application/vnd.dsa.blackmarket.error+json";
 	//preguntar bien las rutas de porque unos tienen dsa y tal. 

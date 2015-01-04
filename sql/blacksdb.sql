@@ -74,7 +74,8 @@ foreign key (autor) references users (username) on delete cascade
 );
 
 create table comentarios (
-autor varchar(20) not null primary key,
+id_comentario int  not null auto_increment primary key,
+autor varchar(20) not null,
 id_contenido varchar(50) not null,
 comentario varchar (100) not null,
 foreign key (id_contenido) references contenidos(id_contenido) on delete cascade,

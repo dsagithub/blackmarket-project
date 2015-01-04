@@ -72,7 +72,7 @@ public class BlackResource {
 	
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	
-	private String GET_BLACK_QUERY_ASIGNATURA = "SELECT * FROM contenidos id_asignatura=? and id_tipo=?";
+	private String GET_BLACK_QUERY_ASIGNATURA = "SELECT * FROM contenidos where id_asignatura=? and id_tipo=?";
 	private String GET_BLACK_QUERY = "SELECT * FROM contenidos id_contenido=?";
 
 	private String GET_BLACK_QUERY_CONTENIDO = "SELECT * FROM contenidos";
@@ -642,6 +642,54 @@ public Black updateInvalid(@PathParam("idcontenido") String idcontenido, Black b
 	return black;
 }
 
+
+@GET
+@Path("/contenidos")
+@Produces(MediaType2.BLACKS_API_BLACK_COLLECTION)
+public BlackCollection getContenido(@QueryParam("idasignatura") int idasignatura, @QueryParam("idtipo") int idtipo) {
+	BlackCollection blacks = new BlackCollection();
+ 
+	Connection conn = null;
+	try {
+		conn = ds.getConnection();
+	} catch (SQLException e) {
+		throw new ServerErrorException("Could not connect to the database",
+				Response.Status.SERVICE_UNAVAILABLE);
+	}
+ 
+	PreparedStatement stmt = null;
+	try {
+		stmt = conn.prepareStatement(GET_BLACK_QUERY_ASIGNATURA);
+		stmt.setInt(1, idasignatura );
+		stmt.setInt(2, idtipo );
+		
+		
+		ResultSet rs = stmt.executeQuery();
+		while (rs.next()) {
+			Black black = new Black();
+			black.setId_contenido(rs.getString("id_contenido"));
+			black.setId_asignatura(rs.getInt("id_asignatura"));
+			black.setId_tipo(rs.getInt("id_tipo"));
+			black.setTitulo(rs.getString("titulo"));
+			black.setDescripcion(rs.getString("descripcion"));
+			//black.setFecha(rs.getFecha("fecha").getTime());
+			black.setAutor(rs.getString("autor"));
+			black.setInvalid(rs.getInt("invalid"));
+			blacks.addBlack(black);
+		}
+	} catch (SQLException e) {
+		throw new ServerErrorException(e.getMessage(),
+				Response.Status.INTERNAL_SERVER_ERROR);
+	} finally {
+		try {
+			if (stmt != null)
+				stmt.close();
+			conn.close();
+		} catch (SQLException e) {
+		}
+	}
+	return blacks;
+}
 
 
 

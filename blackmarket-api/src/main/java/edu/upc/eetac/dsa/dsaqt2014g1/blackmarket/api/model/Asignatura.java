@@ -1,7 +1,24 @@
 package edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model;
 
+import java.util.List;
+
+import javax.ws.rs.core.Link;
+
 public class Asignatura {
 
+	
+	private List<Link> links;
+
+	public List<Link> getLinks() {
+		return links;
+	}
+
+	public void setLinks(List<Link> links) {
+		this.links = links;
+	}
+	
+	
+	
 	private int id_asignatura;
 	private String nombre;
 	private String curso;
@@ -26,6 +43,7 @@ public class Asignatura {
 		this.curso = curso;
 	}
 	
+
 	
 	
 }

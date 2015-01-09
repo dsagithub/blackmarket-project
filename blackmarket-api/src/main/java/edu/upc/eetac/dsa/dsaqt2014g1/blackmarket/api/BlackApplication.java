@@ -11,9 +11,7 @@ public class BlackApplication  extends ResourceConfig {
 
 	public BlackApplication() {
 		super();
-		//register(DeclarativeLinkingFeature.class);
-		//ResourceBundle bundle = ResourceBundle.getBundle("application");
-		
+		register(DeclarativeLinkingFeature.class);
 		register(MultiPartFeature.class);
 		ResourceBundle bundle = ResourceBundle.getBundle("application");
 

@@ -8,16 +8,18 @@ public class Matricula {
 	
 	
 	private List<Link> links;
-	private String username_matriculas;
-	private int id_asignatura_u_matriculas;
-	
-	
+
 	public List<Link> getLinks() {
 		return links;
 	}
+
 	public void setLinks(List<Link> links) {
 		this.links = links;
 	}
+	
+	private String username_matriculas;
+	private int id_asignatura_u_matriculas;
+	
 	public String getUsername_matriculas() {
 		return username_matriculas;
 	}

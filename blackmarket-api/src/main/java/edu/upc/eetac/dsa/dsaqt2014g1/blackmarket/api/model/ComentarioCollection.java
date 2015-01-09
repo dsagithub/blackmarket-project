@@ -8,8 +8,18 @@ import javax.ws.rs.core.Link;
 public class ComentarioCollection {
 
 	
-	private String pattern;
+	
 	private List<Link> links;
+
+	public List<Link> getLinks() {
+		return links;
+	}
+
+	public void setLinks(List<Link> links) {
+		this.links = links;
+	}
+	
+	private String pattern;
 	private List<Comentario> comentarios;
 	
 	public ComentarioCollection(){
@@ -25,18 +35,14 @@ public class ComentarioCollection {
 	public void setPattern(String pattern) {
 		this.pattern = pattern;
 	}
-	public List<Link> getLinks() {
-		return links;
-	}
-	public void setLinks(List<Link> links) {
-		this.links = links;
-	}
+
 	public List<Comentario> getComentarios() {
 		return comentarios;
 	}
 	public void setComentarios(List<Comentario> comentarios) {
 		this.comentarios = comentarios;
 	}
+
 
 	
 	

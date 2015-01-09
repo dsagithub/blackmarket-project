@@ -7,8 +7,19 @@ import javax.ws.rs.core.Link;
 
 public class MatriculaCollection {
 
-	private String pattern;
+	
+	
 	private List<Link> links;
+
+	public List<Link> getLinks() {
+		return links;
+	}
+
+	public void setLinks(List<Link> links) {
+		this.links = links;
+	}
+	
+	private String pattern;
 	private List<Matricula> matriculas;
 	
 	
@@ -27,18 +38,14 @@ public class MatriculaCollection {
 	public void setPattern(String pattern) {
 		this.pattern = pattern;
 	}
-	public List<Link> getLinks() {
-		return links;
-	}
-	public void setLinks(List<Link> links) {
-		this.links = links;
-	}
 	public List<Matricula> getMatriculas() {
 		return matriculas;
 	}
 	public void setMatriculas(List<Matricula> matriculas) {
 		this.matriculas = matriculas;
 	}
+	
+
 	
 	
 }

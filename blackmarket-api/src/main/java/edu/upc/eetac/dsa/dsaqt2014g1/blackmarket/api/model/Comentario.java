@@ -7,19 +7,21 @@ import javax.ws.rs.core.Link;
 public class Comentario {
 	
 	
+	
 	private List<Link> links;
+
+	public List<Link> getLinks() {
+		return links;
+	}
+
+	public void setLinks(List<Link> links) {
+		this.links = links;
+	}
 	private int id_comentario;
 	private String autor;
 	private String id_contenido;
 	private String comentario;
 	
-	
-	public List<Link> getLinks() {
-		return links;
-	}
-	public void setLinks(List<Link> links) {
-		this.links = links;
-	}
 	public String getAutor() {
 		return autor;
 	}

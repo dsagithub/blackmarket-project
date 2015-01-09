@@ -34,8 +34,20 @@ public class BlackCollection {
 @InjectLink(value = "/search/titulo/{titulo}?before={before}", style = Style.ABSOLUTE, rel = "previous", title = "Previous black", type = MediaType2.BLACKS_API_BLACK_COLLECTION, bindings = {
 				@Binding(name = "before", value = "${instance.oldestTimestamp}"),
 				@Binding(name = "titulo", value = "${instance.pattern}") })})
+	
+	private List<Link> links;
+
+	public List<Link> getLinks() {
+		return links;
+	}
+
+	public void setLinks(List<Link> links) {
+		this.links = links;
+	}
+	
+	
+	
 private String pattern;
-private List<Link> links;
 private List<Black> blacks;
 private long newestTimestamp;
 private long oldestTimestamp;
@@ -52,13 +64,7 @@ public void setBlacks(List<Black> blacks) {
 	this.blacks = blacks;
 }
 
-public List<Link> getLinks() {
-	return links;
-}
 
-public void setLinks(List<Link> links) {
-	this.links = links;
-}
 public List<Black> getBlacks() {
 	return blacks;
 }
@@ -84,6 +90,8 @@ public String getPattern() {
 public void setPattern(String pattern) {
 	this.pattern = pattern;
 }
+
+
 
 
 

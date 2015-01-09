@@ -1,26 +1,4 @@
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 package edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -88,8 +66,6 @@ import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.MatriculaCollection;
 
 
 
-
-
 @Path("/blacks")
 public class BlackResource {
 	
@@ -114,8 +90,9 @@ public class BlackResource {
 	private String DELETE_BLACK_QUERY = "delete from contenidos where id_contenido=?";
 	private String UPDATE_BLACK_QUERY= "update contenidos set  titulo=ifnull(?, titulo), descripcion=ifnull(?, descripcion), autor=ifnull(?, autor) where id_contenido=?";
 	private String UPDATE_INVALID_QUERY= "update contenidos set  invalid=invalid+1 where id_contenido=?";
-	//@Context
-	//private SecurityContext security;
+	
+	@Context
+	private SecurityContext security;
 	
 	@GET
 	@Produces(MediaType2.BLACKS_API_BLACK_COLLECTION)
@@ -250,7 +227,7 @@ public class BlackResource {
 
 	@Context
 	private Application app;
-	private SecurityContext security;
+	//private SecurityContext security;
 	
 	@POST
 	@Consumes(MediaType.MULTIPART_FORM_DATA)

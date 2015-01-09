@@ -23,6 +23,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -42,6 +43,8 @@ public class UserResource {
 	
 	private final static String DELETE_USER_QUERY = "Delete from users where username=?";
 	
+	@Context
+	private SecurityContext security;
 
 	private User getUserFromDatabaseNopassword(String username) {
 		User usuario = new User();

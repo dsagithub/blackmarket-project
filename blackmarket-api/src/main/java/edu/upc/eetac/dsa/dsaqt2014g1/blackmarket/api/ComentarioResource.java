@@ -21,6 +21,7 @@ import javax.ws.rs.ServerErrorException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.Comentario;
 import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.ComentarioCollection;
@@ -37,6 +38,9 @@ public class ComentarioResource {
 	private String UPDATE_COMENTARIOS_QUERY = "update comentarios set comentario=ifnull(?, comentario) where id_comentario=?";
 	private String DELETE_COMENTARIOS_QUERY = "delete from comentarios where id_comentario=?";
 
+	@Context
+	private SecurityContext security;
+	
 	@GET
 	@Produces(MediaType2.BLACKS_API_COMENTARIO_COLLECTION)
 	public ComentarioCollection getComentarios() {

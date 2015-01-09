@@ -24,6 +24,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -45,6 +46,9 @@ public class MatriculaResource {
 	private final static String GET_MATRICULA_NOMBRE_ID_QUERY="select * from users_matriculas where username_matriculas=? and id_asignatura_u_matriculas=?";
 	private final static String INSERT_MATRICULA_QUERY="insert into users_matriculas (username_matriculas,id_asignatura_u_matriculas) values (?,?)";
 	private final static String DELETE_MATRICULA_QUERY= "delete from users_matriculas where username_matriculas=? and id_asignatura_u_matriculas=?";
+	
+	@Context
+	private SecurityContext security;
 	
 	@GET
 	@Produces(MediaType2.BLACKS_API_MATRICULA_COLLECTION)

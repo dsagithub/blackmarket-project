@@ -73,6 +73,7 @@ foreign key (id_asignatura) references asignaturas(id_asignatura) on delete casc
 foreign key (autor) references users (username) on delete cascade
 );
 
+
 create table comentarios (
 id_comentario int  not null auto_increment primary key,
 autor varchar(20) not null,

@@ -141,7 +141,7 @@ public class BlackResource {
 				black.setId_tipo(rs.getInt("id_tipo"));
 				black.setTitulo(rs.getString("titulo"));
 				black.setDescripcion(rs.getString("descripcion"));
-				//black.setFecha(rs.getFecha("fecha").getTime());
+				black.setFecha(rs.getString("fecha"));
 				black.setAutor(rs.getString("autor"));
 				black.setInvalid(rs.getInt("invalid"));
 				blacks.addBlack(black);
@@ -366,7 +366,7 @@ public class BlackResource {
 				black.setId_tipo(rs.getInt("id_tipo"));
 				black.setTitulo(rs.getString("titulo"));
 				black.setDescripcion(rs.getString("descripcion"));
-				//black.setFecha(rs.getFecha("fecha").getTime());
+				black.setFecha(rs.getString("fecha"));
 				black.setAutor(rs.getString("autor"));
 				black.setInvalid(rs.getInt("invalid"));
 			} else {
@@ -716,7 +716,7 @@ public BlackCollection getContenido(@QueryParam("idasignatura") int idasignatura
 			black.setId_tipo(rs.getInt("id_tipo"));
 			black.setTitulo(rs.getString("titulo"));
 			black.setDescripcion(rs.getString("descripcion"));
-			//black.setFecha(rs.getFecha("fecha").getTime());
+			black.setFecha(rs.getString("fecha"));
 			black.setAutor(rs.getString("autor"));
 			black.setInvalid(rs.getInt("invalid"));
 			blacks.addBlack(black);

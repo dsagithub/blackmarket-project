@@ -3,11 +3,6 @@ var USERNAME = "";
 var PASSWORD = "";
 
 $(document).ready(function() {
-$.cookie('name', 'value');
-$.cookie('name');
-var password = $.cookie('name');
-console.log(password);
-
 });
 
 
@@ -64,26 +59,44 @@ var data = JSON.stringify(logearse);
 		data : data,
 	}).done(function(data, status, jqxhr) {	
 				var inf = data;
-				USERNAME = $("#name_autentificacion").val();
-				PASSWORD = $("#contraseña_autentificacion").val();
-					if(inf.rol=="registered"){
-					// Mirar de cambiar la direccion  de http
-					$.cookie('name', 'value');
-					$.cookie('name');
-					var password = $.cookie('name');
-					console.log(password);
-					$.cookie("password", PASSWORD);
+				if(inf.loginSuccessful== true){
+				
+					if(USERNAME == "" && PASSWORD == "")
+					{
+					USERNAME = $("#login_username").val();
+					PASSWORD = $("#login_password").val();
+					}
+						if(inf.rol=="registered"){
+						$.cookie('username', USERNAME);
+						$.cookie('password', PASSWORD);
+						var username1 = $.cookie('username');
+						
+						console.log(username1);
+						window.location = "http://localhost/registered.html"
+
+						}
+						else{
+						$.cookie('username', USERNAME);
+						$.cookie('password', PASSWORD);
+						window.location = "http://localhost/admin.html"
+						
+						}
+				}
+				else{
+					document.getElementById('login_username').style.background='#FFFFFF';
+					document.getElementById('login_password').style.background='#F6B5B5';
+					document.getElementById('login_password').value=null;
+					$('#login_password').attr('placeholder','CONTRASEÑA INCORRECTA');
+					}
 					
-					//window.location ="file:///C:/Users/pc/DSA/dsa-final-project/www/principal.html"
-					//window.location = "http://locahost:8080/blackmarket-api/registered.html"
-					}
-					else{
-					window.location = "http://locahost:8080/blackmarket-api/admin.html"
-					}
 					
 				
 	}).fail(function() {
-		$("#repos_result").text("Nombre de usuario incorrecto.");
+	//CAMBIAR EL COLOR
+	document.getElementById('login_username').style.background='#F6B5B5';
+	document.getElementById('login_username').value=null;
+	$('#login_username').attr('placeholder','NOMBRE DE USUARIO INCORRECTO');
+	
 	});
 }
 
@@ -154,8 +167,10 @@ var data = JSON.stringify(logearse);
 		data : data,
 	}).done(function(data, status, jqxhr) {	
 				var repo = data;
+
 				USERNAME = $("#new_usuario_username").val();
 				PASSWORD = $("#new_usuario_password").val();
+
 				 $("#vmatricula").click();
 				 getmatriculas();					
 				

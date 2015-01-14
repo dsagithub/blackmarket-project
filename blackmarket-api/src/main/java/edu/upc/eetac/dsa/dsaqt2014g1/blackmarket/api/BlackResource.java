@@ -58,9 +58,11 @@ import javax.ws.rs.core.SecurityContext;
 
 
 
+
 import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.Asignatura;
 import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.Black;
 import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.BlackCollection;
+import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.Comentario;
 import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.Matricula;
 import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.MatriculaCollection;
 
@@ -238,6 +240,7 @@ public class BlackResource {
 			@FormDataParam("autor") String autor,
 			@FormDataParam("id_contenido") InputStream id_contenido,
 			@FormDataParam("id_contenido") FormDataContentDisposition fileDisposition) {
+	
 		UUID uuid = writeAndConvertImage(id_contenido);
 		//int a=0;
 		Connection conn = null;

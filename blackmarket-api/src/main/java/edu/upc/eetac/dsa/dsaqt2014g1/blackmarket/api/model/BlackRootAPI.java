@@ -8,13 +8,18 @@ import org.glassfish.jersey.linking.InjectLink;
 import org.glassfish.jersey.linking.InjectLinks;
 import org.glassfish.jersey.linking.InjectLink.Style;
 
+import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.BlackResource;
+import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.BlackRootAPIResource;
+import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.MediaType2;
+
 
 public class BlackRootAPI {
 
-	//@InjectLinks({
-		//@InjectLink(resource = BeeterRootAPIResource.class, style = Style.ABSOLUTE, rel = "self bookmark home", title = "Beeter Root API", method = "getRootAPI"),
-		//@InjectLink(resource = StingResource.class, style = Style.ABSOLUTE, rel = "stings", title = "Latest stings", type = MediaType.BEETER_API_STING_COLLECTION),
-		//@InjectLink(resource = StingResource.class, style = Style.ABSOLUTE, rel = "create-stings", title = "Latest stings", type = MediaType.BEETER_API_STING) })
+	@InjectLinks({
+		@InjectLink(resource = BlackRootAPIResource.class, style = Style.ABSOLUTE, rel = "self bookmark home", title = "BlackMarket Root API", method = "getRootAPI"),
+		@InjectLink(resource = BlackResource.class, style = Style.ABSOLUTE, rel = "stings", title = "Latest stings", type = MediaType2.BLACKS_API_BLACK),
+		@InjectLink(resource = BlackResource.class, style = Style.ABSOLUTE, rel = "create-stings", title = "Latest stings", type = MediaType2.BLACKS_API_BLACK) })
+	
 	private List<Link> links;
  
 	public List<Link> getLinks() {

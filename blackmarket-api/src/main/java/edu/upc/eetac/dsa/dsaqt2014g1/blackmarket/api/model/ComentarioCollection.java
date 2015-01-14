@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.ws.rs.core.Link;
 
-public class MatriculaCollection {
+public class ComentarioCollection {
 
 	
 	
@@ -20,32 +20,34 @@ public class MatriculaCollection {
 	}
 	
 	private String pattern;
-	private List<Matricula> matriculas;
+	private List<Comentario> comentarios;
 	
-	
-	public MatriculaCollection(){
+	public ComentarioCollection(){
 		super();
-		matriculas = new ArrayList<>();
+		comentarios = new ArrayList<>();
 	}
-	public void addMatricula(Matricula matricula){
-		matriculas.add(matricula);
+	public void addComentario(Comentario comentario){
+		comentarios.add(comentario);
 	}
-	
-	
 	public String getPattern() {
 		return pattern;
 	}
 	public void setPattern(String pattern) {
 		this.pattern = pattern;
 	}
-	public List<Matricula> getMatriculas() {
-		return matriculas;
-	}
-	public void setMatriculas(List<Matricula> matriculas) {
-		this.matriculas = matriculas;
-	}
-	
 
+	public List<Comentario> getComentarios() {
+		return comentarios;
+	}
+	public void setComentarios(List<Comentario> comentarios) {
+		this.comentarios = comentarios;
+	}
+
+
+	
+	
+	
+	
 	
 	
 }

@@ -19,23 +19,34 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.ServerErrorException;
+import javax.ws.rs.core.CacheControl;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.EntityTag;
+import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
+
+import org.apache.commons.codec.digest.DigestUtils;
 
 import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.Asignatura;
 import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.AsignaturaCollection;
+import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.Black;
+import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.Matricula;
+import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.MatriculaCollection;
 
 @Path("/asignatura")
 public class AsignaturaResource {
 	
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
-	 
+	 //Las querys para la base de datos
 	private final static String GET_ASIGNATURAS_QUERY = "select * from asignaturas";
 	private final static String GET_ASIGNATURAS_ID_QUERY = "select * from asignaturas where id_asignatura=?";
 	private final static String INSERT_ASIGNATURAS_QUERY = "insert into asignaturas (nombre,curso) values (?,?)";
 	private final static String DELETE_ASIGNATURAS_QUERY= "delete from asignaturas where id_asignatura=?";
 	private final static String UPDATE_ASIGNATURA_QUERY= "update asignaturas set nombre=ifnull(?, nombre), curso=ifnull(?, curso) where id_asignatura=?";
+	
+	//Funcion que devolvera todas las asignaturas que hay en la base de datos
 	@GET
-	@Produces(MediaType.BLACKS_API_ASIGNATURA_COLLECTION)
+	@Produces(MediaType2.BLACKS_API_ASIGNATURA_COLLECTION)
 	public AsignaturaCollection getAsignatura() {
 		AsignaturaCollection asignaturas = new AsignaturaCollection();
 		Connection conn = null;
@@ -73,6 +84,50 @@ public class AsignaturaResource {
 		return asignaturas;
 	}
 	
+	
+	
+	private AsignaturaCollection getAsignaturasFromDatabase(String idasignatura) {
+		AsignaturaCollection asignaturas = new AsignaturaCollection();
+
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+		} catch (SQLException e) {
+			throw new ServerErrorException("Could not connect to the database",
+					Response.Status.SERVICE_UNAVAILABLE);
+		}
+
+		PreparedStatement stmt = null;
+		try {
+			stmt = conn.prepareStatement(GET_ASIGNATURAS_ID_QUERY);
+			stmt.setString(1, idasignatura);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				Asignatura asignatura= new Asignatura();
+				asignatura.setId_asignatura(rs.getInt("id_asignatura"));
+				asignatura.setNombre(rs.getString("nombre"));
+				asignatura.setCurso(rs.getString("curso"));
+				asignaturas.addAsignatura(asignatura);
+				
+			}
+
+		} catch (SQLException e) {
+			throw new ServerErrorException(e.getMessage(),
+					Response.Status.INTERNAL_SERVER_ERROR);
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+			}
+		}
+
+		return asignaturas;
+	}
+	
+	
+	//Funcion para devolver una asignatura dando la id de esta asignatura. 
 	private Asignatura getAsignaturaFromDatabase(String idasignatura) {
 		Asignatura asignatura = new Asignatura();
 
@@ -94,7 +149,7 @@ public class AsignaturaResource {
 				asignatura.setNombre(rs.getString("nombre"));
 				asignatura.setCurso(rs.getString("curso"));
 			} else {
-				throw new NotFoundException("There's no sting with stingid="
+				throw new NotFoundException("There's no asignatura with idasignatura="
 						+ idasignatura);
 			}
 
@@ -113,10 +168,28 @@ public class AsignaturaResource {
 		return asignatura;
 	}
 	
+	//Funcion que llama a la funcion "GetAsignaturasFromDatabase" para pintar la asignatura pedida. 
+	@GET
+	@Path("/{idasignatura}")
+	@Produces(MediaType2.BLACKS_API_ASIGNATURA)
+	public Response getAsignaturaUser(@PathParam("idasignatura") String idasignatura, @Context Request request) {
+		Asignatura asignaturas = new Asignatura();
+		CacheControl cc = new CacheControl();
+		asignaturas = getAsignaturaFromDatabase(idasignatura);		
+		String referencia = (asignaturas.getNombre());
+		EntityTag eTag = new EntityTag(referencia);
+		Response.ResponseBuilder rb = request.evaluatePreconditions(eTag); 
+		if (rb != null) {
+			return rb.cacheControl(cc).tag(eTag).build();
+		}
+		rb = Response.ok(asignaturas).cacheControl(cc).tag(eTag);	 
+		return rb.build();
+	}
 	
+	//Funcion que Crea una nueva asignatura 
 	@POST
-	@Consumes(MediaType.BLACKS_API_ASIGNATURA)
-	@Produces(MediaType.BLACKS_API_ASIGNATURA)
+	@Consumes(MediaType2.BLACKS_API_ASIGNATURA)
+	@Produces(MediaType2.BLACKS_API_ASIGNATURA)
 	public Asignatura createAsignatura(Asignatura asignatura) {
 		validateAsignatura(asignatura);
 		Connection conn = null;
@@ -137,13 +210,13 @@ public class AsignaturaResource {
 			stmt.setString(2, asignatura.getCurso());
 			stmt.executeUpdate();
 			ResultSet rs = stmt.getGeneratedKeys();
-			if (rs.next()) {
+			/*if (rs.next()) {
 				int stingid = rs.getInt(1);
 
 				asignatura = getAsignaturaFromDatabase(Integer.toString(stingid));
 			} else {
 				// Something has failed...
-			}
+			}*/
 		} catch (SQLException e) {
 			throw new ServerErrorException(e.getMessage(),
 					Response.Status.INTERNAL_SERVER_ERROR);
@@ -167,7 +240,7 @@ public class AsignaturaResource {
 		
 	}
 	
-	
+	//Borra una asignatura 
 	@DELETE
 	@Path("/{idasignatura}")
 	public void deleteAsignatura(@PathParam("idasignatura") String idasignatura) {
@@ -187,7 +260,7 @@ public class AsignaturaResource {
 
 			int rows = stmt.executeUpdate();
 			if (rows == 0)
-				throw new NotFoundException("There's no sting with stingid="
+				throw new NotFoundException("There's no asignatura with idasignatura="
 						+ idasignatura);// Deleting inexistent sting
 		} catch (SQLException e) {
 			throw new ServerErrorException(e.getMessage(),
@@ -201,20 +274,13 @@ public class AsignaturaResource {
 			}
 		}
 	}
-	/* SI HACEMOS QUE EL PUEDA BORRAR
-	private void validateUser(String idasignatura) {
-		Asignatura asignatura = getStingFromDatabase(idasignatura);
-		String username = asignatura.getUsername();
-		if (!security.getUserPrincipal().getName().equals(username))
-			throw new ForbiddenException(
-					"You are not allowed to modify this sting.");
-	}*/
+
 	
-	
+	//Permite modificar una asignatura (Nombre y Curso)
 	@PUT
 	@Path("/{idasignatura}")
-	@Consumes(MediaType.BLACKS_API_ASIGNATURA)
-	@Produces(MediaType.BLACKS_API_ASIGNATURA)
+	@Consumes(MediaType2.BLACKS_API_ASIGNATURA)
+	@Produces(MediaType2.BLACKS_API_ASIGNATURA)
 	public Asignatura updateAsignatura(@PathParam("idasignatura") String idasignatura, Asignatura asignatura) {
 		//validateUser(stingid);
 		validateUpdateAsignatura(asignatura);
@@ -237,7 +303,7 @@ public class AsignaturaResource {
 			if (rows == 1)
 				asignatura = getAsignaturaFromDatabase(idasignatura);
 			else {
-				throw new NotFoundException("There's no sting with id_asignatura="
+				throw new NotFoundException("There's no asignatura with idasignatura="
 						+ idasignatura);
 			}
 
@@ -264,6 +330,10 @@ public class AsignaturaResource {
 			throw new BadRequestException(
 					"Curso can't be greater than 4 characters.");
 	}
+	
+	
+	
+	
 
 
 }

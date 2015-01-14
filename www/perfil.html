@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Black Market - Cloud</title>
+
+     <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/landing-page.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body class="">
+	 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" id="usernameregistred"></a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+				<li>
+                        <a id="registred" data-toggle="modal" onclick="registretweb()">Menú Principal</a>
+                    </li>
+                    <li>
+                        <a id="logout">Cerrar Sesión</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </div>
+
+
+    <!-- Header -->
+	<div class="container">  
+	
+
+	<div class="col-lg-12">
+		<div align="center" style="margin-top:80px"> <img id="imagenlogo" src="\img\logo.png"; style="width:10%;height:10%" ></img></div>
+		<div  align="center"><h1 id="nombreperfil">Mi Perfil</h1></div>
+		
+		
+<div style="margin-top:10px" class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  <div class="col-lg-6">
+  <div class="panel panel-default" style="margin-top:30px">
+    <div class="panel-heading" align="center"  role="tab" id="headingTwo">
+      <h4 class="panel-title">
+        <a class="collapsed"   data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          Información de usuario
+        </a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+      <div class="panel-body">
+	  
+	 <div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="panel-title">
+            <i class="glyphicon glyphicon-wrench pull-right"></i>
+            <h4>Actualizar contenido</h4>
+          </div>
+        </div> 
+<div class="panel-body">
+          
+          <form class="form form-vertical">
+            <div class="control-group">
+			  <label id="usernamep">Username</label>
+			  <p></p>
+              <label id="nombrep">Nombre</label>
+              <div class="controls">
+                <input type="text" class="form-control" id="nombreinput" placeholder="Enter Name para actualizar">
+              </div>
+            </div>      
+            <div class="control-group">
+              <label id="correop">Correo:</label>
+              <div class="controls">
+                <input type="text" class="form-control" id="correoinput" placeholder="Enter correo para actualizar">
+              </div>
+            </div>   
+            <div class="control-group">
+              <label></label>
+              <div class="controls">
+                <button type="button" onclick="actualizarperfil()" class="btn btn-primary">
+                  Actualizar
+                </button>
+              </div>
+            </div>   
+            
+          </form>
+          
+          
+        </div>	
+	 </div>
+	       </div>
+    </div>
+  </div>
+  </div>
+   <div class="col-lg-6">
+  <div  style="margin-top:30px"class="panel panel-default">
+    <div class="panel-heading" align="center"role="tab" id="headingThree">
+      <h4 class="panel-title">
+        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          Añadir nuevo contenido
+        </a>
+      </h4>
+    </div>
+    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+      <div class="panel-body">
+	  
+	  
+	  
+<div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="panel-title">
+            <i class="glyphicon glyphicon-wrench pull-right"></i>
+            <h4>NUEVO CONTENIDO</h4>
+          </div>
+        </div>
+        <div class="panel-body">
+   
+          <form class="form form-vertical" id="formcontenido" role="form">    
+            <div class="control-group">
+              <label>Titulo</label>
+              <div class="controls">
+                <input  name="titulo" id="tituloimg" type="text" class="form-control" placeholder="Titulo" required="required">
+                
+              </div>
+            </div>   
+
+			<div class="control-group">
+              <label>Asignatura</label>
+              <div class="controls">
+                <select class="form-control"  id="asig">
+				</select>
+              </div>
+            </div>    
+			<div class="control-group">
+              <label>Tipo de contenido</label>
+              <div class="controls">
+                <select  class="form-control"  id="tipo"><option value="1">Teoria</option><option value="2">Actividades</option><option value="3">Examenes</option></select>
+              </div>
+            </div>  
+			
+            <div class="control-group">
+              <label>Descripción</label>
+              <div class="controls">
+                <textarea name="descripcion" id="tituloimg" class="form-control" required="required"></textarea>
+              </div>
+	
+            </div> 
+					 
+			<div class="control-group">	
+			<label for="inputFile">Imagen</label>
+			<input name="id_contenido" type="file" id="inputFile" required="required">
+			</div>		
+            <div class="control-group">
+              <label></label>
+
+              <div class="controls">
+                <input type="submit" id="uploadButton" class="btn btn-primary"/>
+              </div>
+
+			  <div class="controls">
+                <input name="autor" id="autorid" value="a" type="hidden"class="form-control" required="required"></textarea>
+				 <input name="id_asignatura" id="asignaturaid" type="hidden" value="a" class="form-control" required="required"></textarea>
+				  <input name="id_tipo" id="tipoid" value="a" type="hidden" class="form-control" required="required"></textarea>
+              </div>
+			  
+            </div>   
+              
+          </form>
+          
+          
+        </div><!--/panel content-->
+      </div>
+	
+	
+	
+	  </div>
+    </div>
+  </div>
+   </div>
+</div>
+  
+    </div> 
+	
+	<div align="right" class="col-lg-12">
+	</div>
+	
+  <!-- upper section -->
+  <div class="row">
+    <div class="col-sm-12">    	
+     <!-- column 2 -->
+	<div>	 
+	<h3> <p >Mi Contenido</p> </h3> 
+	</div>	 
+	
+       <hr>
+	   <div class="row">
+       <div>
+		<div class="container">
+        <div class="tab-content">
+          <div class="tab-pane active" id="teoria">
+				 <table class="table table-striped">
+					<thead>
+					  <tr><th>ELIMINAR</th><th>UPDATE</th><th>Titulo</th><th>Asignatura</th><th>Autor</th><th>Descripcion</th></tr>
+					</thead>
+					<tbody id="contenido_result">	
+					</tbody>
+				  </table>
+			
+          </div>
+
+
+        </div>
+       </div><!--/row-->   
+  	</div><!--/col-span-9-->
+	</div>
+	
+  </div>
+    </div>
+  </div>
+  
+  	<div  class="modal fade" id="contenido" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="display: none;">
+		  <div class="modal-dialog" style="width:800px;height:100px">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<h3 class="title1" align="center" background-color="red" id="popuptitulo" >Nuevo usuario</h3>
+				<h4 class="title1" align="center" background-color="red" id="popupasignatura" >-Nuevo usuario-EXAMEN</h4>
+			  </div>
+			  <div class="modal-body">
+				<form>
+				<div class="container">  
+				<div class="row">
+				 <div class="col-sm-4">
+				  <img align="center" id="popupimagen" style="max-width:350px;border:5px solid" ></img>
+				  
+						<h4><span style="margin-top:20px" id="popupfecha"></span></h4>
+					
+				  </div>
+				  <div class="col-sm-4">
+				   <h3> <p align ="center">Descripcion:</p></h3>          
+							<div>
+								<h4><span style="margin-top:20px" id="descripcioncontent"></span></h4>
+							</div><!--/col-span-6-->
+		
+				  </div>
+				  </div>
+				  </div>
+				  
+				</form>
+			  </div>
+			  <div class="modal-footer">
+			  
+				<button type="button" class="btn btn-success" id="descargar" ><a class="glyphicon glyphicon-download-alt" style="color:#FFFFFF" id="download"> Descargar</a></button>
+				<span id="invalidoboton">
+			  </span>
+			  </div>
+			</div>
+		  </div>
+		</div>
+
+    <!-- /.intro-header -->   
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+	<script src="js/perfil.js"></script>
+	<script src="js/jquery.cookie.js"></script>
+
+</body>
+</html>

@@ -16,16 +16,25 @@ public class Black {
 	//@InjectLinks({
 		//@InjectLink(resource = StingResource.class, style = Style.ABSOLUTE, rel = "stings", title = "Latest stings", type = MediaType.BEETER_API_STING_COLLECTION),
 		//@InjectLink(resource = StingResource.class, style = Style.ABSOLUTE, rel = "self edit", title = "Sting", type = MediaType.BEETER_API_STING, method = "getSting", bindings = @Binding(name = "stingid", value = "${instance.stingid}")) })
-private List<Link> links;
+
+	
+	private List<Link> links;
+
+	public List<Link> getLinks() {
+		return links;
+	}
+
+	public void setLinks(List<Link> links) {
+		this.links = links;
+	}
 private String id_contenido;
 private int id_asignatura;
 private int id_tipo;
 private String titulo;
 private String descripcion;
 private String autor;
-private String link;
 private int invalid;
-private long fecha;
+private String fecha;
 private long creationTimestamp;
 
 
@@ -35,12 +44,7 @@ public long getCreationTimestamp() {
 public void setCreationTimestamp(long creationTimestamp) {
 	this.creationTimestamp = creationTimestamp;
 }
-public List<Link> getLinks() {
-	return links;
-}
-public void setLinks(List<Link> links) {
-	this.links = links;
-}
+
 public String getId_contenido() {
 	return id_contenido;
 }
@@ -77,24 +81,26 @@ public String getAutor() {
 public void setAutor(String autor) {
 	this.autor = autor;
 }
-public String getLink() {
+/*public String getLink() {
 	return link;
 }
 public void setLink(String link) {
 	this.link = link;
-}
+}*/
 public int getInvalid() {
 	return invalid;
 }
 public void setInvalid(int invalid) {
 	this.invalid = invalid;
 }
-public long getFecha() {
+public String getFecha() {
 	return fecha;
 }
-public void setFecha(long fecha) {
+public void setFecha(String fecha) {
 	this.fecha = fecha;
 }
+
+
 
 
 	

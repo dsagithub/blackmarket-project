@@ -12,6 +12,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -22,10 +23,12 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
+import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.Comentario;
 import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.User;
 
 @Path("/users")
@@ -35,11 +38,13 @@ public class UserResource {
 	private final static String GET_USER_BY_USERNAME_QUERY = "Select * from users where username=?";
 	private final static String INSERT_USER_INTO_USERS = "Insert into users values(?, MD5(?), ?, ?)";
 	private final static String INSERT_USER_INTO_USER_ROLES = "Insert into user_roles values (?, 'registered')";
-	
+	private final static String UPDATE_USUARIO_QUERY="update users set nombre=ifnull(?, nombre),email=ifnull(?, email) where username=?";
 	private final static String GET_ROL_BY_USERNAME_QUERY = "Select rolename from user_roles where username=?";
 	
 	private final static String DELETE_USER_QUERY = "Delete from users where username=?";
 	
+	@Context
+	private SecurityContext security;
 
 	private User getUserFromDatabaseNopassword(String username) {
 		User usuario = new User();
@@ -82,7 +87,7 @@ public class UserResource {
 	
 	@GET
 	@Path("/{username}")
-	@Produces(MediaType.BLACKS_API_USER)
+	@Produces(MediaType2.BLACKS_API_USER)
 	public Response getSting(@PathParam("username") String username, @Context Request request) {
 		User usuario = new User();
 		CacheControl cc = new CacheControl();
@@ -99,8 +104,8 @@ public class UserResource {
 	
 	
 	@POST
-	@Consumes(MediaType.BLACKS_API_USER)
-	@Produces(MediaType.BLACKS_API_USER_COLLECTION)
+	@Consumes(MediaType2.BLACKS_API_USER)
+	@Produces(MediaType2.BLACKS_API_USER_COLLECTION)
 	public User createUser(User user) {
 		validateUser(user);
  
@@ -212,8 +217,8 @@ public class UserResource {
  
 	@Path("/login")
 	@POST
-	@Produces(MediaType.BLACKS_API_USER)
-	@Consumes(MediaType.BLACKS_API_USER_COLLECTION)
+	@Produces(MediaType2.BLACKS_API_USER)
+	@Consumes(MediaType2.BLACKS_API_USER_COLLECTION)
 	public User login(User user) {
 		if (user.getUsername() == "" || user.getPassword() == "")
 			throw new BadRequestException(
@@ -303,5 +308,67 @@ public class UserResource {
 		}
 		return rol;
 	}
+	
+	
+	@PUT
+	@Path("/{username}")
+	@Consumes(MediaType2.BLACKS_API_USER)
+	@Produces(MediaType2.BLACKS_API_USER)
+	public User updateUsuario(
+			@PathParam("username") String username,
+			User user) {
+		// validateUser(stingid);
+		validateUpdateUsuario(user);
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+		} catch (SQLException e) {
+			throw new ServerErrorException("Could not connect to the database",
+					Response.Status.SERVICE_UNAVAILABLE);
+		}
+
+		PreparedStatement stmt = null;
+		try {
+			stmt = conn.prepareStatement(UPDATE_USUARIO_QUERY);
+			stmt.setString(1, user.getNombre());
+			stmt.setString(2, user.getEmail());
+			stmt.setString(3, username);
+
+			int rows = stmt.executeUpdate();
+			if (rows == 1)
+				user = getUserFromDatabaseNopassword(username);
+			else {
+				throw new NotFoundException(
+						"There's no user with username=" + username);
+			}
+
+		} catch (SQLException e) {
+			throw new ServerErrorException(e.getMessage(),
+					Response.Status.INTERNAL_SERVER_ERROR);
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+			}
+		}
+
+		return user;
+	}
+
+	private void validateUpdateUsuario(User user) {
+		if (user.getNombre() != null
+				&& user.getNombre().length() > 50)
+			throw new BadRequestException(
+					"Comentario can't be greater than 50 characters.");
+		if (user.getEmail() != null
+				&& user.getEmail().length() > 50)
+			throw new BadRequestException(
+					"Comentario can't be greater than 50 characters.");
+
+	}
+	
+
 
 }

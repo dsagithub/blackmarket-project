@@ -95,6 +95,7 @@
 		<web-resource-name>blacks</web-resource-name>
 		<url-pattern>/blacs/*</url-pattern>
 		<http-method>GET</http-method>
+		<http-method>POST</http-method>
 	</web-resource-collection>
 </security-constraint>
 
@@ -102,13 +103,12 @@
 	<web-resource-collection>
 		<web-resource-name>blacks</web-resource-name>
 		<url-pattern>/blacks/*</url-pattern>
-		<http-method>POST</http-method>
 		<http-method>PUT</http-method>
 		<http-method>DELETE</http-method>
 	</web-resource-collection>
 	<auth-constraint>
-		<role-name>Administrador</role-name>
-		<role-name>regitered</role-name>
+		<role-name>administrador</role-name>
+		<role-name>registered</role-name>
 	</auth-constraint>
 </security-constraint>
 
@@ -129,8 +129,8 @@
 		<http-method>DELETE</http-method>
 	</web-resource-collection>
 	<auth-constraint>
-		<role-name>Administrador</role-name>
-		<role-name>regitered</role-name>
+		<role-name>administrador</role-name>
+		<role-name>registered</role-name>
 	</auth-constraint>
 </security-constraint>
 
@@ -156,27 +156,6 @@
 	</auth-constraint>
 </security-constraint>
 
-<security-constraint>
-	<web-resource-collection>
-		<web-resource-name>users</web-resource-name>
-		<url-pattern>/users/*</url-pattern>
-		<http-method>GET</http-method>
-	</web-resource-collection>
-</security-constraint>
-
-<security-constraint>
-	<web-resource-collection>
-		<web-resource-name>users</web-resource-name>
-		<url-pattern>/users/*</url-pattern>
-		<http-method>POST</http-method>
-		<http-method>PUT</http-method>
-		<http-method>DELETE</http-method>
-	</web-resource-collection>
-	<auth-constraint>
-		<role-name>Administrador</role-name>
-		<role-name>regitered</role-name>
-	</auth-constraint>
-</security-constraint>
 
     
 

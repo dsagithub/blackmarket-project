@@ -85,7 +85,7 @@ public class BlackResource {
 	
 	
 	
-	private String GET_BLACK_QUERY_USUARIO = "SELECT * FROM contenidos where id_usuario=?";
+	private String GET_BLACK_QUERY_USUARIO = "SELECT * FROM contenidos where autor=?";
 	private String INSERT_BLACK_QUERY = "insert into contenidos (id_contenido,id_asignatura,id_tipo,titulo,descripcion,autor,invalid) values (?,?,?,?,?,?,'0')";
 	private String DELETE_BLACK_QUERY = "delete from contenidos where id_contenido=?";
 	private String UPDATE_BLACK_QUERY= "update contenidos set  titulo=ifnull(?, titulo), descripcion=ifnull(?, descripcion), autor=ifnull(?, autor) where id_contenido=?";
@@ -150,6 +150,51 @@ public class BlackResource {
 
 		PreparedStatement stmt = null;
 		try {
+			stmt = conn.prepareStatement(GET_BLACK_QUERY_USUARIO);
+			stmt.setString(1, username);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				Black black = new Black();
+				//matricula.setUsername_matriculas(rs.getString("username_matriculas"));
+				black.setId_contenido(rs.getString("id_contenido"));
+				black.setId_asignatura(rs.getInt("id_asignatura"));
+				black.setId_tipo(rs.getInt("id_tipo"));
+				black.setTitulo(rs.getString("titulo"));
+				black.setDescripcion(rs.getString("descripcion"));
+				black.setAutor(rs.getString("autor"));
+				black.setFecha(rs.getString("fecha"));
+				blacks.addBlack(black);
+				
+			}
+
+		} catch (SQLException e) {
+			throw new ServerErrorException(e.getMessage(),
+					Response.Status.INTERNAL_SERVER_ERROR);
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+			}
+		}
+
+		return blacks;
+	}
+	
+	private BlackCollection getBlacksultimosFromDatabase(String username) {
+		BlackCollection blacks = new BlackCollection();
+
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+		} catch (SQLException e) {
+			throw new ServerErrorException("Could not connect to the database",
+					Response.Status.SERVICE_UNAVAILABLE);
+		}
+
+		PreparedStatement stmt = null;
+		try {
 			stmt = conn.prepareStatement(GET_BLACK_QUERY_MATRICULADAS);
 			stmt.setString(1, username);
 			ResultSet rs = stmt.executeQuery();
@@ -190,6 +235,23 @@ public class BlackResource {
 		BlackCollection blacks = new BlackCollection();
 		//CacheControl cc = new CacheControl();
 		blacks = getBlacksFromDatabase(username);		
+		//String referencia = DigestUtils.md5Hex(matriculas.setUsername_matriculas());
+		//EntityTag eTag = new EntityTag(referencia);
+		//Response.ResponseBuilder rb = request.evaluatePreconditions(eTag); 
+		//if (rb != null) {
+			//return rb.cacheControl(cc).tag(eTag).build();
+		//}
+		//rb = Response.ok(matriculas).cacheControl(cc).tag(eTag);	 
+		return blacks;
+	}
+	
+	@GET
+	@Path("ultimos/{username}")
+	@Produces(MediaType2.BLACKS_API_BLACK_COLLECTION)
+	public BlackCollection getBlacksUser2(@PathParam("username") String username, @Context Request request) {
+		BlackCollection blacks = new BlackCollection();
+		//CacheControl cc = new CacheControl();
+		blacks = getBlacksultimosFromDatabase(username);		
 		//String referencia = DigestUtils.md5Hex(matriculas.setUsername_matriculas());
 		//EntityTag eTag = new EntityTag(referencia);
 		//Response.ResponseBuilder rb = request.evaluatePreconditions(eTag); 

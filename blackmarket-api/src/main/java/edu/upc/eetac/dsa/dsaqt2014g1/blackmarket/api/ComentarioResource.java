@@ -36,6 +36,7 @@ import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.ComentarioCollection;
 public class ComentarioResource {
 
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
+	 //Las querys para la base de datos
 
 	private String GET_COMENTARIOS_QUERY = "SELECT * FROM comentarios";
 	private String GET_COMENTARIOS_ID_QUERY = "select * from comentarios where id_comentario=?";
@@ -47,6 +48,9 @@ public class ComentarioResource {
 	@Context
 	private SecurityContext security;
 	
+	
+	
+	//funcion que pinta todos los comentarios
 	@GET
 	@Produces(MediaType2.BLACKS_API_COMENTARIO_COLLECTION)
 	public ComentarioCollection getComentarios() {
@@ -88,6 +92,8 @@ public class ComentarioResource {
 		return comentarios;
 	}
 
+	
+	//Funcion que busca en la base de datos un comentario por el id
 	private Comentario getComentarioFromDatabase(String idcomentario) {
 		Comentario comentario = new Comentario();
 
@@ -129,6 +135,9 @@ public class ComentarioResource {
 		return comentario;
 	}
 
+	
+	
+	//Pinta el comentario por id que busco con la funcion "getComentarioFromDatabase"
 	@GET
 	@Path("/{idcomentario}")
 	@Produces(MediaType2.BLACKS_API_COMENTARIO)
@@ -148,6 +157,8 @@ public class ComentarioResource {
 		return rb.build();
 	}
 
+	
+	//Pinta todos los comentarios de un black 
 	@GET
 	@Path("/contenido/{idcontenido}")
 	@Produces(MediaType2.BLACKS_API_COMENTARIO)
@@ -194,6 +205,8 @@ public class ComentarioResource {
 		return comentarios;
 	}
 
+	
+	//Crea un nuevo comentario 
 	@POST
 	@Consumes(MediaType2.BLACKS_API_COMENTARIO)
 	@Produces(MediaType2.BLACKS_API_COMENTARIO)
@@ -250,6 +263,8 @@ public class ComentarioResource {
 
 	}
 
+	
+	//Borra un comentario dandole la id 
 	@DELETE
 	@Path("/{idcomentario}")
 	public void deleteComentario(@PathParam("idcomentario") String idcomentario) {
@@ -286,7 +301,7 @@ public class ComentarioResource {
 		}
 	}
 
-
+//modifica un comentario ( comentario)
 	@PUT
 	@Path("/{idcomentario}")
 	@Consumes(MediaType2.BLACKS_API_COMENTARIO)

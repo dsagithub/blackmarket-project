@@ -37,12 +37,14 @@ import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.MatriculaCollection;
 public class AsignaturaResource {
 	
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
-	 
+	 //Las querys para la base de datos
 	private final static String GET_ASIGNATURAS_QUERY = "select * from asignaturas";
 	private final static String GET_ASIGNATURAS_ID_QUERY = "select * from asignaturas where id_asignatura=?";
 	private final static String INSERT_ASIGNATURAS_QUERY = "insert into asignaturas (nombre,curso) values (?,?)";
 	private final static String DELETE_ASIGNATURAS_QUERY= "delete from asignaturas where id_asignatura=?";
 	private final static String UPDATE_ASIGNATURA_QUERY= "update asignaturas set nombre=ifnull(?, nombre), curso=ifnull(?, curso) where id_asignatura=?";
+	
+	//Funcion que devolvera todas las asignaturas que hay en la base de datos
 	@GET
 	@Produces(MediaType2.BLACKS_API_ASIGNATURA_COLLECTION)
 	public AsignaturaCollection getAsignatura() {
@@ -81,6 +83,8 @@ public class AsignaturaResource {
 		
 		return asignaturas;
 	}
+	
+	
 	
 	private AsignaturaCollection getAsignaturasFromDatabase(String idasignatura) {
 		AsignaturaCollection asignaturas = new AsignaturaCollection();
@@ -122,6 +126,8 @@ public class AsignaturaResource {
 		return asignaturas;
 	}
 	
+	
+	//Funcion para devolver una asignatura dando la id de esta asignatura. 
 	private Asignatura getAsignaturaFromDatabase(String idasignatura) {
 		Asignatura asignatura = new Asignatura();
 
@@ -162,7 +168,7 @@ public class AsignaturaResource {
 		return asignatura;
 	}
 	
-	
+	//Funcion que llama a la funcion "GetAsignaturasFromDatabase" para pintar la asignatura pedida. 
 	@GET
 	@Path("/{idasignatura}")
 	@Produces(MediaType2.BLACKS_API_ASIGNATURA)
@@ -180,7 +186,7 @@ public class AsignaturaResource {
 		return rb.build();
 	}
 	
-	
+	//Funcion que Crea una nueva asignatura 
 	@POST
 	@Consumes(MediaType2.BLACKS_API_ASIGNATURA)
 	@Produces(MediaType2.BLACKS_API_ASIGNATURA)
@@ -234,7 +240,7 @@ public class AsignaturaResource {
 		
 	}
 	
-	
+	//Borra una asignatura 
 	@DELETE
 	@Path("/{idasignatura}")
 	public void deleteAsignatura(@PathParam("idasignatura") String idasignatura) {
@@ -270,7 +276,7 @@ public class AsignaturaResource {
 	}
 
 	
-	
+	//Permite modificar una asignatura (Nombre y Curso)
 	@PUT
 	@Path("/{idasignatura}")
 	@Consumes(MediaType2.BLACKS_API_ASIGNATURA)

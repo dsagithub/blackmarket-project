@@ -63,7 +63,7 @@ import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.MatriculaCollection;
 public class BlackResource {
 	
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
-	
+	 //Las querys para la base de datos
 	private String GET_BLACK_QUERY_ASIGNATURA = "SELECT * FROM contenidos where id_asignatura=? and id_tipo=?";
 	private String GET_BLACK_QUERY = "SELECT * FROM contenidos where id_contenido=?";
 
@@ -87,6 +87,8 @@ public class BlackResource {
 	@Context
 	private SecurityContext security;
 	
+	//Funcion que devolvera todos los Blacks que hay en la base de datos
+
 	@GET
 	@Produces(MediaType2.BLACKS_API_BLACK_COLLECTION)
 	public BlackCollection getBlacks() {
@@ -130,6 +132,8 @@ public class BlackResource {
 		return blacks;
 	}
 	
+	
+	//Funcion que utilizamos para devolver los blacks de un usuario
 	private BlackCollection getBlacksFromDatabase(String username) {
 		BlackCollection blacks = new BlackCollection();
 
@@ -175,6 +179,7 @@ public class BlackResource {
 		return blacks;
 	}
 	
+	//Funcion que retorna los ultimos blakcs en los que esta matriculado un usuario
 	private BlackCollection getBlacksultimosFromDatabase(String username) {
 		BlackCollection blacks = new BlackCollection();
 
@@ -221,44 +226,31 @@ public class BlackResource {
 	}
 	
 	
+// Utiliziamos la funcion "getBlacksFromDatabase" para para pintar los blacks de ese user;
 	@GET
 	@Path("/{username}")
 	@Produces(MediaType2.BLACKS_API_BLACK_COLLECTION)
 	public BlackCollection getBlacksUser(@PathParam("username") String username, @Context Request request) {
 		BlackCollection blacks = new BlackCollection();
-		//CacheControl cc = new CacheControl();
-		blacks = getBlacksFromDatabase(username);		
-		//String referencia = DigestUtils.md5Hex(matriculas.setUsername_matriculas());
-		//EntityTag eTag = new EntityTag(referencia);
-		//Response.ResponseBuilder rb = request.evaluatePreconditions(eTag); 
-		//if (rb != null) {
-			//return rb.cacheControl(cc).tag(eTag).build();
-		//}
-		//rb = Response.ok(matriculas).cacheControl(cc).tag(eTag);	 
+		blacks = getBlacksFromDatabase(username);			 
 		return blacks;
 	}
 	
+	
+	//Utiliza la funcion "getBlacksultimosFromDatabase" para pintar los ultimos blacks en los que estas matriculado
 	@GET
 	@Path("ultimos/{username}")
 	@Produces(MediaType2.BLACKS_API_BLACK_COLLECTION)
 	public BlackCollection getBlacksUser2(@PathParam("username") String username, @Context Request request) {
 		BlackCollection blacks = new BlackCollection();
-		//CacheControl cc = new CacheControl();
 		blacks = getBlacksultimosFromDatabase(username);		
-		//String referencia = DigestUtils.md5Hex(matriculas.setUsername_matriculas());
-		//EntityTag eTag = new EntityTag(referencia);
-		//Response.ResponseBuilder rb = request.evaluatePreconditions(eTag); 
-		//if (rb != null) {
-			//return rb.cacheControl(cc).tag(eTag).build();
-		//}
-		//rb = Response.ok(matriculas).cacheControl(cc).tag(eTag);	 
 		return blacks;
 	}
 	
 	
 	
 	
-	
+	// pinta por pantalla el contenido de un black por su id utilizando la fucion "getBlackFromDatabase"
 	@GET
 	@Path("contenido/{idcontenido}")
 	@Produces(MediaType2.BLACKS_API_BLACK_COLLECTION)
@@ -281,7 +273,8 @@ public class BlackResource {
 
 	@Context
 	private Application app;
-	//private SecurityContext security;
+	//Sube una nuevo black, este son fotos y el usuario al subir un black tiene que rellenar los siguientes campos:
+	// Titulo, tipo de black, id de la asignatura que es, descripcion de black, autor del black, id_contenido sera la foto que subas que mediantes una funcion Crea un id unico y "aleatorio"
 	
 	@POST
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -311,7 +304,6 @@ public class BlackResource {
 			stmt.setString(4, titulo);
 			stmt.setString(5, descripcion);
 			stmt.setString(6, autor);
-			//stmt.setInt(7,a);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
 			throw new ServerErrorException(e.getMessage(),
@@ -332,7 +324,7 @@ public class BlackResource {
 		return black;
 	}
 	
-	
+	//La funcion que crea mediante el nombre del archivo una id aleatoria y lo convierte a .png
 	private UUID writeAndConvertImage(InputStream file) {
 
 		BufferedImage image = null;
@@ -409,7 +401,7 @@ public class BlackResource {
 	
 	
 	
-
+//Funcion que nos permite hacer una busqueda de los blacks que subio un autor concreto. 
 
 	@GET
 	@Path("/search/autor/{nombreautor}")
@@ -461,15 +453,8 @@ public class BlackResource {
 				black.setTitulo(rs.getString("titulo"));
 				black.setDescripcion(rs.getString("descripcion"));
 				black.setAutor(rs.getString("autor"));
-				//black.setLink(rs.getString("link"));
 				black.setInvalid(rs.getInt("invalid"));
 				black.setFecha(rs.getString("fecha"));
-				//oldestTimestamp = rs.getTimestamp("fecha").getTime();
-				//black.setFecha(oldestTimestamp);
-				//if (first) {
-					//first = false;
-					//coleccionblack.setNewestTimestamp(black.getFecha());
-				//}
 				coleccionblack.addBlack(black);
 			}
 			coleccionblack.setOldestTimestamp(oldestTimestamp);
@@ -488,7 +473,7 @@ public class BlackResource {
 
 		return coleccionblack;
 	}
-
+//Funcion que nos permite buscar todos los blacks por su titulo
 @GET
 @Path("/search/titulo/{titulo}")
 @Produces(MediaType2.BLACKS_API_BLACK_COLLECTION)
@@ -539,15 +524,8 @@ public BlackCollection getBlackTitulo(
 			black.setTitulo(rs.getString("titulo"));
 			black.setDescripcion(rs.getString("descripcion"));
 			black.setAutor(rs.getString("autor"));
-			//black.setLink(rs.getString("link"));
 			black.setInvalid(rs.getInt("invalid"));
 			black.setFecha(rs.getString("fecha"));
-			/*oldestTimestamp = rs.getTimestamp("fecha").getTime();
-			black.setFecha(oldestTimestamp);
-			if (first) {
-				first = false;
-				coleccionblack.setNewestTimestamp(black.getFecha());
-			}*/
 			coleccionblack.addBlack(black);
 		}
 		coleccionblack.setOldestTimestamp(oldestTimestamp);
@@ -568,7 +546,7 @@ public BlackCollection getBlackTitulo(
 }
 
 
-
+//Borra un black por su id
 @DELETE
 @Path("/{idcontenido}")
 public void deleteBlack(@PathParam("idcontenido") String idcontenido) {
@@ -603,7 +581,7 @@ public void deleteBlack(@PathParam("idcontenido") String idcontenido) {
 	}
 }
 
-
+//Funcion para modificar un black (solo el titulo y la descripcion)
 @PUT
 @Path("/{idcontenido}")
 @Consumes(MediaType2.BLACKS_API_BLACK)
@@ -624,7 +602,6 @@ public Black updateBlack(@PathParam("idcontenido") String idcontenido, Black bla
 		stmt = conn.prepareStatement(UPDATE_BLACK_QUERY);
 		stmt.setString(1, black.getTitulo());
 		stmt.setString(2, black.getDescripcion());
-		//stmt.setString(3, black.getAutor());
 		stmt.setString(3, idcontenido);
 
 		int rows = stmt.executeUpdate();
@@ -660,7 +637,7 @@ private void validateUpdateBlack(Black black) {
 				"Descripcion can't be greater than 100 characters.");
 }
 
-
+//Funcion que basicaente lo que hace es modificar el valor invalido sumandole 1 para que cuando llege a cierto nivel el administrador sepa que ese contenido hay que revisarlo.
 @PUT
 @Path("/invalid/{idcontenido}")
 @Consumes(MediaType2.BLACKS_API_BLACK)
@@ -703,7 +680,7 @@ public Black updateInvalid(@PathParam("idcontenido") String idcontenido, Black b
 	return black;
 }
 
-
+//Pinta todos los blacks de una asignatura de un tipo concreto (examenes, apuntes, ejercicios)
 @GET
 @Path("/contenidos")
 @Produces(MediaType2.BLACKS_API_BLACK_COLLECTION)

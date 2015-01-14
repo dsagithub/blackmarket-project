@@ -19,12 +19,17 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.ServerErrorException;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.Asignatura;
 import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.AsignaturaCollection;
+import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.Black;
 import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.Matricula;
 import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.MatriculaCollection;
 
@@ -95,7 +100,6 @@ public class AsignaturaResource {
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				Asignatura asignatura= new Asignatura();
-				//matricula.setUsername_matriculas(rs.getString("username_matriculas"));
 				asignatura.setId_asignatura(rs.getInt("id_asignatura"));
 				asignatura.setNombre(rs.getString("nombre"));
 				asignatura.setCurso(rs.getString("curso"));
@@ -139,7 +143,7 @@ public class AsignaturaResource {
 				asignatura.setNombre(rs.getString("nombre"));
 				asignatura.setCurso(rs.getString("curso"));
 			} else {
-				throw new NotFoundException("There's no sting with stingid="
+				throw new NotFoundException("There's no asignatura with idasignatura="
 						+ idasignatura);
 			}
 
@@ -162,18 +166,18 @@ public class AsignaturaResource {
 	@GET
 	@Path("/{idasignatura}")
 	@Produces(MediaType2.BLACKS_API_ASIGNATURA)
-	public Asignatura getAsignaturaUser(@PathParam("idasignatura") String idasignatura, @Context Request request) {
+	public Response getAsignaturaUser(@PathParam("idasignatura") String idasignatura, @Context Request request) {
 		Asignatura asignaturas = new Asignatura();
-		//CacheControl cc = new CacheControl();
+		CacheControl cc = new CacheControl();
 		asignaturas = getAsignaturaFromDatabase(idasignatura);		
-		//String referencia = DigestUtils.md5Hex(matriculas.setUsername_matriculas());
-		//EntityTag eTag = new EntityTag(referencia);
-		//Response.ResponseBuilder rb = request.evaluatePreconditions(eTag); 
-		//if (rb != null) {
-			//return rb.cacheControl(cc).tag(eTag).build();
-		//}
-		//rb = Response.ok(matriculas).cacheControl(cc).tag(eTag);	 
-		return asignaturas;
+		String referencia = (asignaturas.getNombre());
+		EntityTag eTag = new EntityTag(referencia);
+		Response.ResponseBuilder rb = request.evaluatePreconditions(eTag); 
+		if (rb != null) {
+			return rb.cacheControl(cc).tag(eTag).build();
+		}
+		rb = Response.ok(asignaturas).cacheControl(cc).tag(eTag);	 
+		return rb.build();
 	}
 	
 	
@@ -250,7 +254,7 @@ public class AsignaturaResource {
 
 			int rows = stmt.executeUpdate();
 			if (rows == 0)
-				throw new NotFoundException("There's no sting with stingid="
+				throw new NotFoundException("There's no asignatura with idasignatura="
 						+ idasignatura);// Deleting inexistent sting
 		} catch (SQLException e) {
 			throw new ServerErrorException(e.getMessage(),
@@ -264,14 +268,7 @@ public class AsignaturaResource {
 			}
 		}
 	}
-	/* SI HACEMOS QUE EL PUEDA BORRAR
-	private void validateUser(String idasignatura) {
-		Asignatura asignatura = getStingFromDatabase(idasignatura);
-		String username = asignatura.getUsername();
-		if (!security.getUserPrincipal().getName().equals(username))
-			throw new ForbiddenException(
-					"You are not allowed to modify this sting.");
-	}*/
+
 	
 	
 	@PUT
@@ -300,7 +297,7 @@ public class AsignaturaResource {
 			if (rows == 1)
 				asignatura = getAsignaturaFromDatabase(idasignatura);
 			else {
-				throw new NotFoundException("There's no sting with id_asignatura="
+				throw new NotFoundException("There's no asignatura with idasignatura="
 						+ idasignatura);
 			}
 
@@ -327,6 +324,10 @@ public class AsignaturaResource {
 			throw new BadRequestException(
 					"Curso can't be greater than 4 characters.");
 	}
+	
+	
+	
+	
 
 
 }

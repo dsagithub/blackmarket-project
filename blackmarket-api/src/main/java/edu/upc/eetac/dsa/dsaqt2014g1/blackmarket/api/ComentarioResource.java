@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
@@ -18,11 +19,16 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.ServerErrorException;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
+import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.Black;
 import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.Comentario;
 import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.ComentarioCollection;
 
@@ -104,7 +110,7 @@ public class ComentarioResource {
 				comentario.setId_contenido(rs.getString("id_contenido"));
 				comentario.setComentario(rs.getString("comentario"));
 			} else {
-				throw new NotFoundException("There's no sting with stingid="
+				throw new NotFoundException("There's no comentario with idcomentario="
 						+ idcomentario);
 			}
 
@@ -126,21 +132,20 @@ public class ComentarioResource {
 	@GET
 	@Path("/{idcomentario}")
 	@Produces(MediaType2.BLACKS_API_COMENTARIO)
-	public Comentario getComentarioUser(
+	public Response getComentarioUser(
 			@PathParam("idcomentario") String idcomentario,
 			@Context Request request) {
 		Comentario comentario = new Comentario();
-		//CacheControl cc = new CacheControl();
+		CacheControl cc = new CacheControl();
 		comentario = getComentarioFromDatabase(idcomentario);
-		// String referencia =
-		// DigestUtils.md5Hex(matriculas.setUsername_matriculas());
-		// EntityTag eTag = new EntityTag(referencia);
-		// Response.ResponseBuilder rb = request.evaluatePreconditions(eTag);
-		// if (rb != null) {
-		// return rb.cacheControl(cc).tag(eTag).build();
-		// }
-		// rb = Response.ok(matriculas).cacheControl(cc).tag(eTag);
-		return comentario;
+		 String referencia =(comentario.getComentario());
+		 EntityTag eTag = new EntityTag(referencia);
+		 Response.ResponseBuilder rb = request.evaluatePreconditions(eTag);
+		 if (rb != null) {
+			 return rb.cacheControl(cc).tag(eTag).build();
+		 }
+		 rb = Response.ok(comentario).cacheControl(cc).tag(eTag);
+		return rb.build();
 	}
 
 	@GET
@@ -150,7 +155,7 @@ public class ComentarioResource {
 			@PathParam("idcontenido") String idcontenido,
 			@Context Request request) {
 		ComentarioCollection comentarios = new ComentarioCollection();
-		System.out.println("dentro de idconetidos \n");
+		//System.out.println("dentro de idconetidos \n");
 
 		Connection conn = null;
 		try {
@@ -265,7 +270,7 @@ public class ComentarioResource {
 			int rows = stmt.executeUpdate();
 			if (rows == 0)
 				throw new NotFoundException(
-						"There's no sting with idcomentario=" + idcomentario);// Deleting
+						"There's no comentario with idcomentario=" + idcomentario);// Deleting
 																				// inexistent
 																				// sting
 		} catch (SQLException e) {
@@ -281,14 +286,6 @@ public class ComentarioResource {
 		}
 	}
 
-	/*
-	 * SI HACEMOS QUE EL PUEDA BORRAR private void validateUser(String
-	 * idasignatura) { Asignatura asignatura =
-	 * getStingFromDatabase(idasignatura); String username =
-	 * asignatura.getUsername(); if
-	 * (!security.getUserPrincipal().getName().equals(username)) throw new
-	 * ForbiddenException( "You are not allowed to modify this sting."); }
-	 */
 
 	@PUT
 	@Path("/{idcomentario}")
@@ -297,7 +294,7 @@ public class ComentarioResource {
 	public Comentario updateComentario(
 			@PathParam("idcomentario") String idcomentario,
 			Comentario comentario) {
-		// validateUser(stingid);
+		 validateUser(idcomentario);
 		validateUpdateComentario(comentario);
 		Connection conn = null;
 		try {
@@ -318,7 +315,7 @@ public class ComentarioResource {
 				comentario = getComentarioFromDatabase(idcomentario);
 			else {
 				throw new NotFoundException(
-						"There's no sting with id_comentario=" + idcomentario);
+						"There's no comentario with id_comentario=" + idcomentario);
 			}
 
 		} catch (SQLException e) {
@@ -342,6 +339,14 @@ public class ComentarioResource {
 			throw new BadRequestException(
 					"Comentario can't be greater than 100 characters.");
 
+	}
+	
+	private void validateUser(String idcomentario) {
+		Comentario comentario = getComentarioFromDatabase(idcomentario);
+		String username = comentario.getAutor();
+		if (!security.getUserPrincipal().getName().equals(username))
+			throw new ForbiddenException(
+					"You are not allowed to modify this comentario.");
 	}
 
 }

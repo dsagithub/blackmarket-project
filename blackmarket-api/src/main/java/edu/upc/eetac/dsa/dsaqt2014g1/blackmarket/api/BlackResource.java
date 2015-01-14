@@ -1,6 +1,7 @@
 
 package edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -36,23 +37,12 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.ServerErrorException;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -65,6 +55,7 @@ import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.BlackCollection;
 import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.Comentario;
 import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.Matricula;
 import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.MatriculaCollection;
+
 
 
 
@@ -90,7 +81,7 @@ public class BlackResource {
 	private String GET_BLACK_QUERY_USUARIO = "SELECT * FROM contenidos where autor=?";
 	private String INSERT_BLACK_QUERY = "insert into contenidos (id_contenido,id_asignatura,id_tipo,titulo,descripcion,autor,invalid) values (?,?,?,?,?,?,'0')";
 	private String DELETE_BLACK_QUERY = "delete from contenidos where id_contenido=?";
-	private String UPDATE_BLACK_QUERY= "update contenidos set  titulo=ifnull(?, titulo), descripcion=ifnull(?, descripcion), autor=ifnull(?, autor) where id_contenido=?";
+	private String UPDATE_BLACK_QUERY= "update contenidos set  titulo=ifnull(?, titulo), descripcion=ifnull(?, descripcion)) where id_contenido=?";
 	private String UPDATE_INVALID_QUERY= "update contenidos set  invalid=invalid+1 where id_contenido=?";
 	
 	@Context
@@ -271,18 +262,17 @@ public class BlackResource {
 	@GET
 	@Path("contenido/{idcontenido}")
 	@Produces(MediaType2.BLACKS_API_BLACK_COLLECTION)
-	public Black getBlacksPorId(@PathParam("idcontenido") String idcontenido, @Context Request request) {
+	public Response getBlacksPorId(@PathParam("idcontenido") String idcontenido, @Context Request request) {
 		Black black = new Black();
-		//CacheControl cc = new CacheControl();
+		CacheControl cc = new CacheControl();
 		black = getBlackFromDatabase(idcontenido);		
-		//String referencia = DigestUtils.md5Hex(matriculas.setUsername_matriculas());
-		//EntityTag eTag = new EntityTag(referencia);
-		//Response.ResponseBuilder rb = request.evaluatePreconditions(eTag); 
-		//if (rb != null) {
-			//return rb.cacheControl(cc).tag(eTag).build();
-		//}
-		//rb = Response.ok(matriculas).cacheControl(cc).tag(eTag);	 
-		return black;
+		String referencia = (black.getFecha());
+		EntityTag eTag = new EntityTag(referencia);
+		Response.ResponseBuilder rb = request.evaluatePreconditions(eTag); 
+		if (rb != null) {
+			return rb.cacheControl(cc).tag(eTag).build();		}
+		rb = Response.ok(black).cacheControl(cc).tag(eTag);	 
+		return rb.build();
 	}
 	
 	
@@ -368,21 +358,6 @@ public class BlackResource {
 		return uuid;
 	}
 	
-/*
-	private void validateSting(Black sting) {
-		if (sting.getSubject() == null)
-			throw new BadRequestException("Subject can't be null.");
-		if (sting.getContent() == null)
-			throw new BadRequestException("Content can't be null.");
-		if (sting.getSubject().length() > 100)
-			throw new BadRequestException(
-					"Subject can't be greater than 100 characters.");
-		if (sting.getContent().length() > 500)
-			throw new BadRequestException(
-					"Content can't be greater than 500 characters.");
-	}
-	
-	*/
 	
 	
 	private Black getBlackFromDatabase(String idcontenido) {
@@ -412,7 +387,7 @@ public class BlackResource {
 				black.setAutor(rs.getString("autor"));
 				black.setInvalid(rs.getInt("invalid"));
 			} else {
-				throw new NotFoundException("There's no sting with stingid="
+				throw new NotFoundException("There's no Black with idcontenido="
 						+ idcontenido);
 			}
 
@@ -597,7 +572,7 @@ public BlackCollection getBlackTitulo(
 @DELETE
 @Path("/{idcontenido}")
 public void deleteBlack(@PathParam("idcontenido") String idcontenido) {
-	//validateUser(idasignatura);
+	validateUser(idcontenido);
 	Connection conn = null;
 	try {
 		conn = ds.getConnection();
@@ -613,7 +588,7 @@ public void deleteBlack(@PathParam("idcontenido") String idcontenido) {
 
 		int rows = stmt.executeUpdate();
 		if (rows == 0)
-			throw new NotFoundException("There's no sting with stingid="
+			throw new NotFoundException("There's no black with idcontenido="
 					+ idcontenido);// Deleting inexistent sting
 	} catch (SQLException e) {
 		throw new ServerErrorException(e.getMessage(),
@@ -634,7 +609,7 @@ public void deleteBlack(@PathParam("idcontenido") String idcontenido) {
 @Consumes(MediaType2.BLACKS_API_BLACK)
 @Produces(MediaType2.BLACKS_API_BLACK)
 public Black updateBlack(@PathParam("idcontenido") String idcontenido, Black black) {
-	//validateUser(stingid);
+	validateUser(idcontenido);
 	validateUpdateBlack(black);
 	Connection conn = null;
 	try {
@@ -649,14 +624,14 @@ public Black updateBlack(@PathParam("idcontenido") String idcontenido, Black bla
 		stmt = conn.prepareStatement(UPDATE_BLACK_QUERY);
 		stmt.setString(1, black.getTitulo());
 		stmt.setString(2, black.getDescripcion());
-		stmt.setString(3, black.getAutor());
-		stmt.setString(4, idcontenido);
+		//stmt.setString(3, black.getAutor());
+		stmt.setString(3, idcontenido);
 
 		int rows = stmt.executeUpdate();
 		if (rows == 1)
 			black = getBlackFromDatabase(idcontenido);
 		else {
-			throw new NotFoundException("There's no sting with id_asignatura="
+			throw new NotFoundException("There's no black with idcontenido="
 					+ idcontenido);
 		}
 
@@ -677,12 +652,12 @@ public Black updateBlack(@PathParam("idcontenido") String idcontenido, Black bla
 
 
 private void validateUpdateBlack(Black black) {
-	/*if (black.getId_asignatura() != null && black.getId_asignatura().length() > 20)
+	if (black.getTitulo() != null && black.getTitulo().length() > 30)
 		throw new BadRequestException(
-				"Nombre can't be greater than 20 characters.");
-	if (black.getCurso() != null && black.getCurso().length() > 4)
+				"Titulo can't be greater than 30 characters.");
+	if (black.getDescripcion() != null && black.getDescripcion().length() > 100)
 		throw new BadRequestException(
-				"Curso can't be greater than 4 characters.");*/
+				"Descripcion can't be greater than 100 characters.");
 }
 
 
@@ -691,7 +666,7 @@ private void validateUpdateBlack(Black black) {
 @Consumes(MediaType2.BLACKS_API_BLACK)
 @Produces(MediaType2.BLACKS_API_BLACK)
 public Black updateInvalid(@PathParam("idcontenido") String idcontenido, Black black) {
-	//validateUser(stingid);
+	validateUser(idcontenido);
 	validateUpdateBlack(black);
 	Connection conn = null;
 	try {
@@ -709,7 +684,7 @@ public Black updateInvalid(@PathParam("idcontenido") String idcontenido, Black b
 		if (rows == 1)
 			black = getBlackFromDatabase(idcontenido);
 		else {
-			throw new NotFoundException("There's no sting with id_asignatura="
+			throw new NotFoundException("There's no Black with idcontenido="
 					+ idcontenido);
 		}
 
@@ -777,6 +752,14 @@ public BlackCollection getContenido(@QueryParam("idasignatura") int idasignatura
 	return blacks;
 }
 
+
+private void validateUser(String idcontenido) {
+	Black black = getBlackFromDatabase(idcontenido);
+	String username = black.getAutor();
+	if (!security.getUserPrincipal().getName().equals(username))
+		throw new ForbiddenException(
+				"You are not allowed to modify this sting.");
+}
 
 
 

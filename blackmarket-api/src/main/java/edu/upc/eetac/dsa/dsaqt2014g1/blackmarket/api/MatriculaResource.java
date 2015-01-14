@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
@@ -30,6 +31,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 
 import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.Asignatura;
 import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.AsignaturaCollection;
+import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.Black;
 import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.Matricula;
 import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.MatriculaCollection;
 import edu.upc.eetac.dsa.dsaqt2014g1.blackmarket.api.model.User;
@@ -47,8 +49,8 @@ public class MatriculaResource {
 	private final static String INSERT_MATRICULA_QUERY="insert into users_matriculas (username_matriculas,id_asignatura_u_matriculas) values (?,?)";
 	private final static String DELETE_MATRICULA_QUERY= "delete from users_matriculas where username_matriculas=? and id_asignatura_u_matriculas=?";
 	
-	@Context
-	private SecurityContext security;
+	//@Context
+	//private SecurityContext security;
 	
 	@GET
 	@Produces(MediaType2.BLACKS_API_MATRICULA_COLLECTION)
@@ -106,7 +108,7 @@ public class MatriculaResource {
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				Matricula matricula = new Matricula();
-				//matricula.setUsername_matriculas(rs.getString("username_matriculas"));
+
 				matricula.setId_asignatura_u_matriculas(rs.getInt("id_asignatura_u_matriculas"));
 				matriculas.addMatricula(matricula);
 				
@@ -133,15 +135,9 @@ public class MatriculaResource {
 	@Produces(MediaType2.BLACKS_API_MATRICULA_COLLECTION)
 	public MatriculaCollection getMatriculasUser(@PathParam("username") String username, @Context Request request) {
 		MatriculaCollection matriculas = new MatriculaCollection();
-		//CacheControl cc = new CacheControl();
+
 		matriculas = getMatriculasFromDatabase(username);		
-		//String referencia = DigestUtils.md5Hex(matriculas.setUsername_matriculas());
-		//EntityTag eTag = new EntityTag(referencia);
-		//Response.ResponseBuilder rb = request.evaluatePreconditions(eTag); 
-		//if (rb != null) {
-			//return rb.cacheControl(cc).tag(eTag).build();
-		//}
-		//rb = Response.ok(matriculas).cacheControl(cc).tag(eTag);	 
+ 
 		return matriculas;
 	}
 	
@@ -194,7 +190,7 @@ public class MatriculaResource {
 	@Consumes(MediaType2.BLACKS_API_MATRICULA)
 	@Produces(MediaType2.BLACKS_API_MATRICULA)
 	public  Matricula createMatricula(Matricula matricula) {
-		//validateAsignatura(asignatura);
+
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
@@ -207,8 +203,6 @@ public class MatriculaResource {
 		try {
 			stmt = conn.prepareStatement(INSERT_MATRICULA_QUERY,
 					Statement.RETURN_GENERATED_KEYS);
-
-			//stmt.setString(1, security.getUserPrincipal().getName());
 			stmt.setString(1, matricula.getUsername_matriculas());
 			stmt.setInt(2, matricula.getId_asignatura_u_matriculas());
 			stmt.executeUpdate();
@@ -240,7 +234,6 @@ public class MatriculaResource {
 	@DELETE
 	@Path("/{username}")
 	public void deleteAsignatura(@PathParam("username") String username, @QueryParam("idmatricula") int idmatricula) {
-		//validateUser(idasignatura);
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
@@ -276,15 +269,7 @@ public class MatriculaResource {
 	
 	
 	
-	/* SI HACEMOS QUE EL PUEDA BORRAR
-	private void validateUser(String idasignatura) {
-		Asignatura asignatura = getStingFromDatabase(idasignatura);
-		String username = asignatura.getUsername();
-		if (!security.getUserPrincipal().getName().equals(username))
-			throw new ForbiddenException(
-					"You are not allowed to modify this sting.");
-	}*/
-	
+
 	
 
 	

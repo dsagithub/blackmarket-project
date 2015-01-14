@@ -166,7 +166,7 @@ public class ComentarioResource {
 			@PathParam("idcontenido") String idcontenido,
 			@Context Request request) {
 		ComentarioCollection comentarios = new ComentarioCollection();
-		//System.out.println("dentro de idconetidos \n");
+		
 
 		Connection conn = null;
 		try {
@@ -225,19 +225,11 @@ public class ComentarioResource {
 			stmt = conn.prepareStatement(INSERT_COMENTARIOS_QUERY,
 					Statement.RETURN_GENERATED_KEYS);
 
-			// stmt.setString(1, security.getUserPrincipal().getName());
 			stmt.setString(1, comentario.getAutor());
 			stmt.setString(2, comentario.getId_contenido());
 			stmt.setString(3, comentario.getComentario());
 			stmt.executeUpdate();
-			ResultSet rs = stmt.getGeneratedKeys();
-			/*
-			 * if (rs.next()) { int stingid = rs.getInt(1);
-			 * 
-			 * comentario =
-			 * getComentarioFromDatabase(Integer.toString(idcomentario)); } else
-			 * { // Something has failed... }
-			 */
+			
 		} catch (SQLException e) {
 			throw new ServerErrorException(e.getMessage(),
 					Response.Status.INTERNAL_SERVER_ERROR);
@@ -302,6 +294,7 @@ public class ComentarioResource {
 	}
 
 //modifica un comentario ( comentario)
+	
 	@PUT
 	@Path("/{idcomentario}")
 	@Consumes(MediaType2.BLACKS_API_COMENTARIO)

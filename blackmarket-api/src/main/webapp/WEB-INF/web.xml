@@ -93,7 +93,7 @@
 <security-constraint>
 	<web-resource-collection>
 		<web-resource-name>blacks</web-resource-name>
-		<url-pattern>/blacs/*</url-pattern>
+		<url-pattern>/blacks/*</url-pattern>
 		<http-method>GET</http-method>
 		<http-method>POST</http-method>
 	</web-resource-collection>

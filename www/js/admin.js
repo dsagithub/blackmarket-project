@@ -18,7 +18,7 @@ $("#logout").click(function(e) {
 	e.preventDefault();
 	$.removeCookie('username');
 	$.removeCookie('password');
-	window.location = "http://localhost/index.html"
+	window.location = "http://www.blackmarket.dsa/index.html"
 });
 
 function getnombrebyid(id){
@@ -147,7 +147,7 @@ var url = API_BASE_URL + '/blacks/'+id;
 			dataType : 'json',
 			url : url,
 		}).done(function(data, status, jqxhr) {
-		window.location = "http://localhost/admin.html"
+		window.location = "http://www.blackmarket.dsa/admin.html"
 		}).fail(function() {
 		
 		});

@@ -27,7 +27,7 @@ $.ajaxSetup({
 $("#atrasregistred").click(function(e) {
 	e.preventDefault();
 	$.removeCookie('comentario');
-	window.location = "http://localhost/registered.html"
+	window.location = "http://www.blackmarket.dsa/registered.html"
 });
 
 
@@ -35,7 +35,7 @@ $("#logout").click(function(e) {
 	e.preventDefault();
 	$.removeCookie('username');
 	$.removeCookie('password');
-	window.location = "http://localhost/index.html"
+	window.location = "http://www.blackmarket.dsa/index.html"
 });
 
 
@@ -103,7 +103,7 @@ var data = JSON.stringify(coment);
 			data : data,
 			contentType : 'application/vnd.blackmarket.api.comentario+json',
 		}).done(function(data, status, jqxhr) {
-		window.location = "http://localhost/comentarios.html"
+		window.location = "http://www.blackmarket.dsa/comentarios.html"
 		}).fail(function() {		
 	});
 	}
@@ -173,7 +173,7 @@ var url = API_BASE_URL + '/comentarios/'+id;
 			dataType : 'json',
 			url : url,
 		}).done(function(data, status, jqxhr) {
-		window.location = "http://localhost/comentarios.html"
+		window.location = "http://www.blackmarket.dsa/comentarios.html"
 		}).fail(function() {
 		});
 

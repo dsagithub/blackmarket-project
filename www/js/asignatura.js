@@ -27,7 +27,7 @@ $("#logout").click(function(e) {
 	e.preventDefault();
 	$.removeCookie('username');
 	$.removeCookie('password');
-	window.location = "http://localhost/index.html"
+	window.location = "http://www.blackmarket.dsa/index.html"
 });
 
 $("#teoria").click(function(e) {
@@ -49,7 +49,7 @@ $("#examenes").click(function(e) {
 $("#atrasregistred").click(function(e) {
 	e.preventDefault();
 	$.removeCookie('idasignatura');
-	window.location = "http://localhost/registered.html"
+	window.location = "http://www.blackmarket.dsa/registered.html"
 });
 
 
@@ -155,13 +155,13 @@ function pagautor(id){
 	$.removeCookie('texto');
 	$.removeCookie('busqueda');
 	$.cookie('autor',id)
-	window.location = "http://localhost/autor.html"
+	window.location = "http://www.blackmarket.dsa/autor.html"
 	
 }
 function comentariosclick(idcontenidocomentario)
 {
 $.cookie('comentario',idcontenidocomentario);
-window.location = "http://localhost/comentarios.html"
+window.location = "http://www.blackmarket.dsa/comentarios.html"
 }
 
 function invalidoclick(idcontenidoinvalid)

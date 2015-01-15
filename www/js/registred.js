@@ -46,26 +46,26 @@ $("#buscartitulo").click(function(e) {
 function buscarcontenidoautor(text) {
 $.cookie('texto',text);
 $.cookie('busqueda',"autor");
-window.location = "http://localhost/search.html"
+window.location = "http://www.blackmarket.dsa/search.html"
 
 }
 
 function buscarcontenidotitulo(text) {
 $.cookie('texto',text);
 $.cookie('busqueda',"titulo");
-window.location = "http://localhost/search.html"
+window.location = "http://www.blackmarket.dsa/search.html"
 }
 
 $("#logout").click(function(e) {
 	e.preventDefault();
 	$.removeCookie('username');
 	$.removeCookie('password');
-	window.location = "http://localhost/index.html"
+	window.location = "http://www.blackmarket.dsa/index.html"
 });
 
 $("#miperfil").click(function(e) {
 	e.preventDefault();
-	window.location = "http://localhost/perfil.html"
+	window.location = "http://www.blackmarket.dsa/perfil.html"
 });
 
 function getasigmatriculas(){
@@ -101,7 +101,7 @@ function asignaturaescojida(id){
 console.log(id);
 NASIGNATURA=""
 $.cookie('idasignatura',id);
-window.location = "http://localhost/asignatura.html"
+window.location = "http://www.blackmarket.dsa/asignatura.html"
 }
 
 function getnombrebyid(id){
@@ -269,7 +269,7 @@ function invalidoclick(idcontenidoinvalid)
 function comentariosclick(idcontenidocomentario)
 {
 $.cookie('comentario',idcontenidocomentario);
-window.location = "http://localhost/comentarios.html"
+window.location = "http://www.blackmarket.dsa/comentarios.html"
 }
 
 function getmatriculas(){
@@ -308,7 +308,7 @@ $("#asignatura_result_matricula").text('');
 
 $("#aceptar").click(function(e) {
 	e.preventDefault();
-	window.location = "http://localhost/registered.html"
+	window.location = "http://www.blackmarket.dsa/registered.html"
 });
 
 function matriculaescojida(obj,id){

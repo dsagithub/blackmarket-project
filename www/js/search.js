@@ -1,4 +1,4 @@
-var API_BASE_URL = "http://localhost:8080/blackmarket-api";
+var API_BASE_URL = "http://147.83.7.155:8080/blackmarket-api";
 var USERNAME="";
 var PASSWORD="";
 var NOMBREASIGNATURA =0;
@@ -74,10 +74,11 @@ $("#contenido_result").text("");
 					
 					$.each(repo, function(j, k) {
 					var content=k;
-			
+			if(content.id_asignatura != undefined){
 					$('<tr><th><a id = "'+content.id_contenido+'" onclick="titulo(id)" href="#"  data-toggle="modal" data-target="#contenido" data-whatever="@fat">'+content.titulo+'</th><th>  <span id="'+content.id_asignatura+''+NOMBREASIGNATURA+'">'+content.id_asignatura+'<span>  </th><th><a id = "'+content.autor+'" onclick="pagautor(id)" href="#">'+content.autor+'</th><th>'+content.descripcion+'</th></tr>').appendTo($('#contenido_result'));
 						NOMBREASIGNATURA++;
 						getnombrebyid(content.id_asignatura);
+						}
 						
 						
 				});
@@ -118,6 +119,7 @@ var url = API_BASE_URL + '/blacks/contenido/'+id;
 					$("#descripcioncontent").text(cotenidoinfo.descripcion);
 					
 					$("#invalidoboton").text("");
+					$("#comentariosboton").text("");
 					
 					console.log(cotenidoinfo.fecha);
 					$("#popupfecha").text(cotenidoinfo.fecha);
@@ -131,13 +133,35 @@ var url = API_BASE_URL + '/blacks/contenido/'+id;
 					a.href = "\img\\"+cotenidoinfo.id_contenido+".png";
 					
 					$('<button type="button" class="btn btn-danger" id="'+id+'" onclick="invalidoclick(id)" ><a class=" glyphicon glyphicon-thumbs-down" style="color:#FFFFFF" id="prueba"> Invalido</a></button>').appendTo($('#invalidoboton'));
-				
+					$('<button type="button" class="btn btn-primary"  id="'+id+'" onclick="comentariosclick(id)" ><a class="glyphicon glyphicon-pencil" style="color:#FFFFFF" id="coments">Comentarios</a></button>').appendTo($('#comentariosboton'));
+					
 					
 		}).fail(function() {
 		});
 		
 console.log(id);
 
+}
+function invalidoclick(idcontenidoinvalid)
+{
+	console.log(idcontenidoinvalid);
+	var url = API_BASE_URL + '/blacks/invalid/'+idcontenidoinvalid;
+			$.ajax({
+			headers: { 'Authorization': "Basic "+ btoa(USERNAME+':'+PASSWORD)},
+				url : url,
+				type : 'PUT',
+				crossDomain : true,
+				dataType : 'json',
+				url : url,
+			}).done(function(data, status, jqxhr) {					
+			}).fail(function() {
+			});
+}
+
+function comentariosclick(idcontenidocomentario)
+{
+$.cookie('comentario',idcontenidocomentario);
+window.location = "http://localhost/comentarios.html"
 }
 
 function pagautor(id){

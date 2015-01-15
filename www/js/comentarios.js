@@ -1,4 +1,4 @@
-var API_BASE_URL = "http://localhost:8080/blackmarket-api";
+var API_BASE_URL = "http://147.83.7.155:8080/blackmarket-api";
 var USERNAME="";
 var PASSWORD="";
 var IDCONTENIDO="";
@@ -60,7 +60,7 @@ console.log (id);
 
 
 function getcomentarios(idcontenidocomentario){
-var url = API_BASE_URL + '/blacks'
+var url = API_BASE_URL + '/comentarios/contenido/'+idcontenidocomentario;
 $("#contenido_result").text("");
 		$.ajax({
 			url : url,
@@ -70,33 +70,44 @@ $("#contenido_result").text("");
 			url : url,
 		}).done(function(data, status, jqxhr) {
 		var repos = data;
-				$.each(repos, function(i, v) {
-					var repo = v;
-					
-					$.each(repo, function(j, k) {
-					var content=k;
-					if(content.invalid >= 10)
-					{
-					$('<tr style="background-color:#FFCCCC"><th style="width:1px;text-align:center"><button class="btn btn-default btn-sm" style="padding:2px" id="'+content.id_contenido+'" onclick="eliminar(id)"><span class="glyphicon glyphicon-ban-circle"></span></button></th><th><a id = "'+content.id_contenido+'" onclick="titulo(id)" href="#"  data-toggle="modal" data-target="#contenido" data-whatever="@fat">'+content.titulo+'</th><th><span id="'+content.id_asignatura+''+NOMBREASIGNATURA+'">'+content.id_asignatura+'<span> </th><th>'+content.autor+'</th><th>'+content.descripcion+'</th></tr>').appendTo($('#contenido_result'));
-						NOMBREASIGNATURA++;
-						getnombrebyid(content.id_asignatura);
-					}
-					else{
-					$('<tr><th style="width:1px;text-align:center""><button class="btn btn-default btn-sm" style="padding:2px"><span class="glyphicon glyphicon-ban-circle"></span></button></th><th><a id = "'+content.id_contenido+'" onclick="titulo(id)" href="#"  data-toggle="modal" data-target="#contenido" data-whatever="@fat">'+content.titulo+'</th><th><span id="'+content.id_asignatura+''+NOMBREASIGNATURA+'">'+content.id_asignatura+'<span></th><th>'+content.autor+'</th><th>'+content.descripcion+'</th></tr>').appendTo($('#contenido_result'));
-						NOMBREASIGNATURA++;
-						getnombrebyid(content.id_asignatura);
-					}
-						
-						
-				});
-			});	
-		}).fail(function() {
-		$("#contenido_result").text("NO HAY CONTENIDO");
+			$.each(repos, function(i, v) {
+			var repo = v;
+			$.each(repo, function(l, k) {
+			var coment = k;
+			if(coment.id_comentario != undefined){
 
-		
+					$('<tr><th style="width:1px;text-align:center"><button class="btn btn-default btn-sm" style="padding:2px" id="'+coment.id_comentario+'" onclick="eliminar(id)"><span class="glyphicon glyphicon-ban-circle"></span></button></th><th><th>'+coment.autor+' </th><th>'+coment.comentario+'</th>').appendTo($('#contenido_result'));
+				}
+				});
+			});
+		}).fail(function() {
+		$("#contenido_result").text("NO HAY CONTENIDO");		
 	});
 }
+function comentar(){
+var url = API_BASE_URL + '/comentarios';
+console.log( $("#comentarios").val() );
+if($("#comentarios").val() != ""){
+var coment = new Object();
+	coment.autor = USERNAME;
+	coment.id_contenido = IDCONTENIDO;
+	coment.comentario = $("#comentarios").val();
 
+var data = JSON.stringify(coment);
+		$.ajax({
+		 headers: { 'Authorization': "Basic "+ btoa(USERNAME+':'+PASSWORD)},
+			url : url,
+			type : 'POST',
+			crossDomain : true,
+			dataType : 'json',
+			data : data,
+			contentType : 'application/vnd.blackmarket.api.comentario+json',
+		}).done(function(data, status, jqxhr) {
+		window.location = "http://localhost/comentarios.html"
+		}).fail(function() {		
+	});
+	}
+}
 function getdatoscontenido(id)
 {
 console.log(id);
@@ -127,7 +138,6 @@ var url = API_BASE_URL + '/blacks/contenido/'+id;
 					$("#descripcioncontent").text(cotenidoinfo.descripcion);
 					
 					$("#invalidoboton").text("");
-					$("#nombreasignatura").text(cotenidoinfo.id_asignatura);
 					
 					console.log(cotenidoinfo.fecha);
 					$("#popupfecha").text(cotenidoinfo.fecha);
@@ -152,17 +162,20 @@ var url = API_BASE_URL + '/blacks/contenido/'+id;
 console.log(id);
 
 }
-function invalidoclick(idcontenidoinvalid)
-{
-	console.log(idcontenidoinvalid);
-	var url = API_BASE_URL + '/blacks/invalid/'+idcontenidoinvalid;
-			$.ajax({
-				url : url,
-				type : 'PUT',
-				crossDomain : true,
-				dataType : 'json',
-				url : url,
-			}).done(function(data, status, jqxhr) {					
-			}).fail(function() {
-			});
+function eliminar(id){
+console.log(id);
+var url = API_BASE_URL + '/comentarios/'+id;
+		$.ajax({
+		 headers: { 'Authorization': "Basic "+ btoa(USERNAME+':'+PASSWORD)},
+			url : url,
+			type : 'DELETE',
+			crossDomain : true,
+			dataType : 'json',
+			url : url,
+		}).done(function(data, status, jqxhr) {
+		window.location = "http://localhost/comentarios.html"
+		}).fail(function() {
+		});
+
 }
+

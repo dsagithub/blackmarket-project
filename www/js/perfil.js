@@ -1,12 +1,19 @@
-var API_BASE_URL = "http://localhost:8080/blackmarket-api";
+var API_BASE_URL = "http://147.83.7.155:8080/blackmarket-api";
 var USERNAME="";
 var PASSWORD="";
 var NOMBREASIGNATURA =0;
 var NOMBREASIGNATURA2 =0;
 
+$.ajaxSetup({
+    headers: { 'Authorization': "Basic "+ btoa(USERNAME+':'+PASSWORD) }
+});
+
+
 $(document).ready(function() {
 USERNAME = $.cookie('username');
 PASSWORD = $.cookie('password');
+console.log(USERNAME);
+console.log(PASSWORD);
 $("#usernameregistred").text("Mi Perfil");
 $("#nombreperfil").text(USERNAME);
 gettodo($.cookie('username'));
@@ -28,6 +35,7 @@ var update = new Object();
 	}
 	var data = JSON.stringify(update);
 	$.ajax({
+	 headers: { 'Authorization': "Basic "+ btoa(USERNAME+':'+PASSWORD)},
 		url : url,
 		type : 'PUT',
 		crossDomain : true,
@@ -56,6 +64,7 @@ var url = API_BASE_URL + '/blacks';
 	console.log(formData);
 
 	$.ajax({
+	 headers: { 'Authorization': "Basic "+ btoa(USERNAME+':'+PASSWORD)},
 		url: url,
 		type: 'POST',
 		crossDomain : true,
@@ -126,9 +135,7 @@ var asign=0;
 }
 
 
-$.ajaxSetup({
-    headers: { 'Authorization': "Basic "+ btoa(USERNAME+':'+PASSWORD) }
-});
+
 
 function registretweb(){
 window.location = "http://localhost/registered.html"
@@ -181,7 +188,7 @@ $("#contenido_result").text("");
 					var content=k;
 					
 				if(content.id_asignatura != undefined){
-					$('<tr><th style="width:1px;text-align:center""><button class="btn btn-default btn-sm" style="padding:2px" id="'+content.id_contenido+'" onclick="eliminar(id)"><span class="glyphicon glyphicon-ban-circle"></span></button></th><th style="width:1px;text-align:center""><button class="btn btn-default btn-sm" style="padding:2px" id="'+content.id_contenido+'" onclick="actualizar(id)"><span class="glyphicon glyphicon-retweet"></span></button></th><th><a id = "'+content.id_contenido+'" onclick="titulo(id)" href="#"  data-toggle="modal" data-target="#contenido" data-whatever="@fat">'+content.titulo+'</th><th><span id="'+content.id_asignatura+''+NOMBREASIGNATURA+'">'+content.id_asignatura+'<span></th><th>'+content.autor+'</th><th>'+content.descripcion+'</th></tr>').appendTo($('#contenido_result'));
+					$('<tr><th style="width:1px;text-align:center""><button class="btn btn-default btn-sm" style="padding:2px" id="'+content.id_contenido+'" onclick="eliminar(id)"><span class="glyphicon glyphicon-ban-circle"></span></button></th>     <th><a id = "'+content.id_contenido+'" onclick="titulo(id)" href="#"  data-toggle="modal" data-target="#contenido" data-whatever="@fat">'+content.titulo+'</th><th><span id="'+content.id_asignatura+''+NOMBREASIGNATURA+'">'+content.id_asignatura+'<span></th><th>'+content.autor+'</th><th>'+content.descripcion+'</th></tr>').appendTo($('#contenido_result'));
 						NOMBREASIGNATURA++;
 						getnombrebyid(content.id_asignatura);
 						}
@@ -227,6 +234,7 @@ var url = API_BASE_URL + '/blacks/contenido/'+id;
 					$("#descripcioncontent").text(cotenidoinfo.descripcion);
 					
 					$("#invalidoboton").text("");
+					$("#comentariosboton").text("");
 					
 					console.log(cotenidoinfo.fecha);
 					$("#popupfecha").text(cotenidoinfo.fecha);
@@ -240,6 +248,7 @@ var url = API_BASE_URL + '/blacks/contenido/'+id;
 					a.href = "\img\\"+cotenidoinfo.id_contenido+".png";
 					
 					$('<button type="button" class="btn btn-danger" id="'+id+'" onclick="invalidoclick(id)" ><a class=" glyphicon glyphicon-thumbs-down" style="color:#FFFFFF" id="prueba"> Invalido</a></button>').appendTo($('#invalidoboton'));
+				$('<button type="button" class="btn btn-primary"  id="'+id+'" onclick="comentariosclick(id)" ><a class="glyphicon glyphicon-pencil" style="color:#FFFFFF" id="coments">Comentarios</a></button>').appendTo($('#comentariosboton'));
 				
 					
 		}).fail(function() {
@@ -249,11 +258,17 @@ console.log(id);
 
 }
 
+function comentariosclick(idcontenidocomentario)
+{
+$.cookie('comentario',idcontenidocomentario);
+window.location = "http://localhost/comentarios.html"
+}
 function eliminar(id){
 
 console.log(id);
 var url = API_BASE_URL + '/blacks/'+id;
 		$.ajax({
+		 headers: { 'Authorization': "Basic "+ btoa(USERNAME+':'+PASSWORD)},
 			url : url,
 			type : 'DELETE',
 			crossDomain : true,
@@ -267,7 +282,4 @@ var url = API_BASE_URL + '/blacks/'+id;
 
 }
 
-function actualizar(id){
-console.log("actualizar");
-}
 

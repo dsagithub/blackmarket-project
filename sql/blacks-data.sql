@@ -19,4 +19,4 @@ insert into asignaturas (nombre,curso) values ('CESA','2b');
 insert into asignaturas (nombre,curso) values ('ER','2b');
 insert into asignaturas (nombre,curso) values ('MXS','3a');
 insert into asignaturas (nombre,curso) values ('XLAM','3a');
-
+insert into asignaturas (nombre,curso) values ('SAI','3a');

@@ -352,7 +352,7 @@ public class ComentarioResource {
 	private void validateUser(String idcomentario) {
 		Comentario comentario = getComentarioFromDatabase(idcomentario);
 		String username = comentario.getAutor();
-		if (!security.getUserPrincipal().getName().equals(username))
+		if (!security.getUserPrincipal().getName().equals(username) && !security.getUserPrincipal().getName().equals("admin"))
 			throw new ForbiddenException(
 					"You are not allowed to modify this comentario.");
 	}

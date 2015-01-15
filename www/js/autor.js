@@ -11,11 +11,7 @@ USERNAME = $.cookie('username');
 PASSWORD = $.cookie('password');
 AUTOR = $.cookie('autor');
 $("#usernameregistred").text(USERNAME);
-$("#busqueda").text("Contenido creado por "+ $.cookie('autor'));
-//console.debug($.cookie("username"));
-//console.debug($.cookie("password"));
-//getultimoscontenidos;
-//getmatriculas();	
+$("#busqueda").text("Contenido creado por "+ $.cookie('autor'));	
 getautor(AUTOR);
 });
 
@@ -128,10 +124,10 @@ var url = API_BASE_URL + '/blacks/contenido/'+id;
 					var imagen = document.getElementById("popupimagen"); 
 					//var nimagen = cotenidoinfo.id_contenido;
 					console.log(cotenidoinfo.id_contenido);
-					imagen.src = "\img\\"+cotenidoinfo.id_contenido+".png";
+					imagen.src = "/img//"+cotenidoinfo.id_contenido+".png";
 					
 					var a = document.getElementById("download"); 
-					a.href = "\img\\"+cotenidoinfo.id_contenido+".png";
+					a.href = "/img//"+cotenidoinfo.id_contenido+".png";
 					
 					$('<button type="button" class="btn btn-danger" id="'+id+'" onclick="invalidoclick(id)" ><a class=" glyphicon glyphicon-thumbs-down" style="color:#FFFFFF" id="prueba"> Invalido</a></button>').appendTo($('#invalidoboton'));
 					$('<button type="button" class="btn btn-primary"  id="'+id+'" onclick="comentariosclick(id)" ><a class="glyphicon glyphicon-pencil" style="color:#FFFFFF" id="coments">Comentarios</a></button>').appendTo($('#comentariosboton'));

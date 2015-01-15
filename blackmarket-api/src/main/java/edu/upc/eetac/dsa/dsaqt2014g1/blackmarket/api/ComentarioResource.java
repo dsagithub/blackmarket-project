@@ -260,7 +260,7 @@ public class ComentarioResource {
 	@DELETE
 	@Path("/{idcomentario}")
 	public void deleteComentario(@PathParam("idcomentario") String idcomentario) {
-		// validateUser(idasignatura);
+		 validateUser(idcomentario);
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();

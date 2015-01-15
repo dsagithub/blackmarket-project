@@ -1,4 +1,4 @@
-var API_BASE_URL = "http://localhost:8080/blackmarket-api";
+var API_BASE_URL = "http://147.83.7.155:8080/blackmarket-api";
 var USERNAME="";
 var PASSWORD="";
 var NOMBREASIGNATURA =0;
@@ -58,6 +58,7 @@ $("#contenido_result").text("");
 					
 					$.each(repo, function(j, k) {
 					var content=k;
+				if(content.id_asignatura != undefined){
 					if(content.invalid >= 10)
 					{
 					$('<tr style="background-color:#FFCCCC"><th style="width:1px;text-align:center"><button class="btn btn-default btn-sm" style="padding:2px" id="'+content.id_contenido+'" onclick="eliminar(id)"><span class="glyphicon glyphicon-ban-circle"></span></button></th><th><a id = "'+content.id_contenido+'" onclick="titulo(id)" href="#"  data-toggle="modal" data-target="#contenido" data-whatever="@fat">'+content.titulo+'</th><th><span id="'+content.id_asignatura+''+NOMBREASIGNATURA+'">'+content.id_asignatura+'<span> </th><th>'+content.autor+'</th><th>'+content.descripcion+'</th></tr>').appendTo($('#contenido_result'));
@@ -69,6 +70,8 @@ $("#contenido_result").text("");
 						NOMBREASIGNATURA++;
 						getnombrebyid(content.id_asignatura);
 					}
+					}
+					
 						
 						
 				});
@@ -137,6 +140,7 @@ function eliminar(id){
 console.log(id);
 var url = API_BASE_URL + '/blacks/'+id;
 		$.ajax({
+		   headers: { 'Authorization': "Basic "+ btoa(USERNAME+':'+PASSWORD)},
 			url : url,
 			type : 'DELETE',
 			crossDomain : true,

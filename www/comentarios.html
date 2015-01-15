@@ -73,7 +73,7 @@
 	<div class="col-sm-4">
       <!-- left -->
 	  <div>
-		<h3><i ></i> <p style="margin-top:20px"><span id="nombreasignatura" >fdf</span></p></h3>
+		<h3><i ></i> <p style="margin-top:20px"><span id="nombreasignatura" >Contenido</span></p></h3>
 	  </div>
 	  <hr>
 	<img  id="imagen" style="max-width:360px;border:2px solid" ></img>
@@ -92,6 +92,12 @@
 	   <div class="row">
         	<div>
 			<div class="tab-content">
+			<div class="controls">
+                <input type="text" class="form-control" maxlength="50" id="comentarios" placeholder="Comentar">
+				 <button type="button" onclick="comentar()" class="btn btn-primary">
+                  Comentar
+                </button>
+              </div>
           <div class="tab-pane active" id="teoria">
             <p style="margin-top:20px"> </p>
 				 <table class="table table-striped">
@@ -158,36 +164,6 @@
 			</div>
 		  </div>
 		</div>
-		
-		<div onunload="CargarParent()" class="modal fade" id="matricula"  tabindex="-1" role="dialog"  aria-labelledby="exampleModalLabel" aria-hidden="true">
-		  <div class="modal-dialog" style="width:500px;height:500px">
-			<div class="modal-content">
-			  <div class="modal-header">
-				<h4 class="title1" align="left" background-color="red" id="exampleModalLabel" color>Nueva Matricula<p> Selecciona las assignaturas:</p></h4>
-			  </div>
-			  <div class="modal-body">
-				<form>
-				  <div class="row">
-					  <div>
-						<div class="panel panel-default">
-						  <div class="panel-heading">
-							<h3 class="panel-title">Assignaturas </h3>
-						  </div>
-						  <div class="title1">
-							 <span align="center" id="asignatura_result_matricula"></span>
-						  </div>
-						</div>
-					  </div><!-- /.col-sm-8 -->
-				  </div>
-				</form>
-			  </div>
-			  <div class="modal-footer">
-			 <button type="button" class="btn btn-primary" id="aceptar">Aceptar</button>
-			  </div>
-			</div>
-		  </div>
-		</div>
-    
 
 
    <!-- jQuery -->

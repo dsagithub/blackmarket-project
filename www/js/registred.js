@@ -1,4 +1,4 @@
-var API_BASE_URL = "http://localhost:8080/blackmarket-api";
+var API_BASE_URL = "http://147.83.7.155:8080/blackmarket-api";
 var USERNAME="";
 var PASSWORD="";
 var NASIGNATURA="";
@@ -72,6 +72,7 @@ function getasigmatriculas(){
 var url = API_BASE_URL + '/matricula/'+USERNAME;
 $("#asignatura_result").text("");
 	$.ajax({
+	
 		url : url,
 		type : 'GET',
 		crossDomain : true,
@@ -254,6 +255,7 @@ function invalidoclick(idcontenidoinvalid)
 	console.log(idcontenidoinvalid);
 	var url = API_BASE_URL + '/blacks/invalid/'+idcontenidoinvalid;
 			$.ajax({
+			headers: { 'Authorization': "Basic "+ btoa(USERNAME+':'+PASSWORD)},
 				url : url,
 				type : 'PUT',
 				crossDomain : true,
@@ -318,6 +320,7 @@ console.log(id);
 	matricula.id_asignatura_u_matriculas = id;
 	var data = JSON.stringify(matricula);
 		$.ajax({
+		headers: { 'Authorization': "Basic "+ btoa(USERNAME+':'+PASSWORD)},
 			url : url,
 			type : 'POST',
 			crossDomain : true,

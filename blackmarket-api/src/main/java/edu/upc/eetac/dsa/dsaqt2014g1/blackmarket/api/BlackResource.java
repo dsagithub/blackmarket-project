@@ -643,8 +643,8 @@ private void validateUpdateBlack(Black black) {
 @Consumes(MediaType2.BLACKS_API_BLACK)
 @Produces(MediaType2.BLACKS_API_BLACK)
 public Black updateInvalid(@PathParam("idcontenido") String idcontenido, Black black) {
-	validateUser(idcontenido);
-	validateUpdateBlack(black);
+	//validateUser(idcontenido);
+	//validateUpdateBlack(black);
 	Connection conn = null;
 	try {
 		conn = ds.getConnection();
@@ -733,9 +733,10 @@ public BlackCollection getContenido(@QueryParam("idasignatura") int idasignatura
 private void validateUser(String idcontenido) {
 	Black black = getBlackFromDatabase(idcontenido);
 	String username = black.getAutor();
-	if (!security.getUserPrincipal().getName().equals(username))
+	
+	if (!security.getUserPrincipal().getName().equals(username) && !security.getUserPrincipal().getName().equals("admin"))
 		throw new ForbiddenException(
-				"You are not allowed to modify this sting.");
+				"You are not allowed to modify this Black.");
 }
 
 

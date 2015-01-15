@@ -72,13 +72,13 @@ var data = JSON.stringify(logearse);
 						var username1 = $.cookie('username');
 						
 						console.log(username1);
-						window.location = "http://localhost/registered.html"
+						window.location = "http://www.blackmarket.dsa/registered.html"
 
 						}
 						else{
 						$.cookie('username', USERNAME);
 						$.cookie('password', PASSWORD);
-						window.location = "http://localhost/admin.html"
+						window.location = "http://www.blackmarket.dsa/admin.html"
 						
 						}
 				}

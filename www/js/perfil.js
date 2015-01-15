@@ -45,7 +45,7 @@ var update = new Object();
 		data : data,
 	}).done(function(data, status, jqxhr) {	
 	
-	window.location = "http://localhost/perfil.html"
+	window.location = "http://www.blackmarket.dsa/perfil.html"
 				
 	}).fail(function() {
 
@@ -74,7 +74,7 @@ var url = API_BASE_URL + '/blacks';
         processData: false
 	})
 	.done(function (data, status, jqxhr) {
-	window.location = "http://localhost/perfil.html"
+	window.location = "http://www.blackmarket.dsa/perfil.html"
 
 	})
     .fail(function (jqXHR, textStatus) {
@@ -138,14 +138,14 @@ var asign=0;
 
 
 function registretweb(){
-window.location = "http://localhost/registered.html"
+window.location = "http://www.blackmarket.dsa/registered.html"
 }
 
 $("#logout").click(function(e) {
 	e.preventDefault();
 	$.removeCookie('username');
 	$.removeCookie('password');
-	window.location = "http://localhost/index.html"
+	window.location = "http://www.blackmarket.dsa/index.html"
 });
 
 function getnombrebyid(id){
@@ -261,7 +261,7 @@ console.log(id);
 function comentariosclick(idcontenidocomentario)
 {
 $.cookie('comentario',idcontenidocomentario);
-window.location = "http://localhost/comentarios.html"
+window.location = "http://www.blackmarket.dsa/comentarios.html"
 }
 function eliminar(id){
 
@@ -275,7 +275,7 @@ var url = API_BASE_URL + '/blacks/'+id;
 			dataType : 'json',
 			url : url,
 		}).done(function(data, status, jqxhr) {
-		window.location = "http://localhost/perfil.html"
+		window.location = "http://www.blackmarket.dsa/perfil.html"
 		}).fail(function() {
 		
 		});

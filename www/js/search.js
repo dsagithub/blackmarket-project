@@ -25,14 +25,14 @@ $("#logout").click(function(e) {
 	e.preventDefault();
 	$.removeCookie('username');
 	$.removeCookie('password');
-	window.location = "http://localhost/index.html"
+	window.location = "http://www.blackmarket.dsa/index.html"
 });
 
 $("#atrasregistred").click(function(e) {
 	e.preventDefault();
 	$.removeCookie('texto');
 	$.removeCookie('busqueda');
-	window.location = "http://localhost/registered.html"
+	window.location = "http://www.blackmarket.dsa/registered.html"
 });
 
 function getnombrebyid(id){
@@ -161,14 +161,14 @@ function invalidoclick(idcontenidoinvalid)
 function comentariosclick(idcontenidocomentario)
 {
 $.cookie('comentario',idcontenidocomentario);
-window.location = "http://localhost/comentarios.html"
+window.location = "http://www.blackmarket.dsa/comentarios.html"
 }
 
 function pagautor(id){
 	$.removeCookie('texto');
 	$.removeCookie('busqueda');
 	$.cookie('autor',id)
-	window.location = "http://localhost/autor.html"
+	window.location = "http://www.blackmarket.dsa/autor.html"
 	
 }
 
